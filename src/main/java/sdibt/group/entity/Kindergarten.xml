@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须定义，非绑定到类或是接口的方式 -->
+<mapper namespace="sdibt.group.dao.KindergartenDao">
+
+	<resultMap type="sdibt.group.entity.Kindergarten" id="kindergartenMap">
+		<id column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="name" property="name" javaType="java.lang.String"/>
+		<result column="description" property="description" javaType="java.lang.String"/>
+		<result column="address" property="address" javaType="java.lang.String"/>
+		<result column="telephone" property="telephone" javaType="java.lang.String"/>
+		<result column="picture" property="picture" javaType="java.lang.String"/>
+		<result column="registered_date" property="registeredDate" javaType="java.lang.String"/>
+		<result column="principal_id" property="principalId" javaType="java.lang.Integer"/>
+	</resultMap>
+
+	<!-- 根据园长id查询幼儿园记录 -->
+	<select id="findKindergarten" resultMap="kindergartenMap" parameterType="java.lang.Integer">
+		select * from kindergarten_info where principal_id=#{principalId}
+	</select>
+	
+	<!-- 查询所有省份记录 -->
+	<select id="listProvince" resultType="map">
+		select * from hat_province
+	</select>
+	
+	<!-- 根据省份id查询该省的城市记录 -->
+	<select id="listCity" resultType="map" parameterType="java.lang.String">
+		select * from hat_city where father = #{provinceId }
+	</select>
+	
+	<!-- 根据城市id查询该市的县区记录 -->
+	<select id="listArea" resultType="map" parameterType="java.lang.String">
+		select * from hat_area where father = #{cityId }
+	</select>
+	
+	<!-- 修改幼儿园记录 -->
+	<update id="updateKindergarten" parameterType="sdibt.group.entity.Kindergarten">
+	    update kindergarten_info 
+	    <trim prefix="set" suffixOverrides=",">
+	        <if test="name!=null">name = #{name, jdbcType=VARCHAR },</if>
+	        <if test="description!=null">description = #{description, jdbcType=VARCHAR },</if>
+	        <if test="address!=null">address = #{address, jdbcType=VARCHAR },</if>
+	        <if test="telephone!=null">telephone = #{telephone, jdbcType=VARCHAR },</if>
+	        <if test="picture!=null">picture = #{picture, jdbcType=VARCHAR },</if>
+	    </trim>
+	    where id = #{id, jdbcType=INTEGER }
+	</update>
+
+  </mapper>

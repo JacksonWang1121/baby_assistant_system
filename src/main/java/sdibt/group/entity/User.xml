@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须定义，非绑定到类或是接口的方式 -->
+<mapper namespace="sdibt.group.dao.UserDao">
+
+    <resultMap type="sdibt.group.entity.User" id="userMap">
+		<id column="id" property="id" javaType="java.lang.Long" jdbcType="INTEGER"/>
+		<result column="username" property="username" javaType="java.lang.String"/>
+		<result column="password" property="password" javaType="java.lang.String"/>
+		<result column="salt" property="salt" javaType="java.lang.String"/>
+		<result column="locked" property="locked" javaType="java.lang.Boolean"/>
+		<result column="real_name" property="realName" javaType="java.lang.String"/>
+		<result column="nick_name" property="nickName" javaType="java.lang.String"/>
+		<result column="user_icon" property="userIcon" javaType="java.lang.String"/>
+		<result column="personality_signature" property="personalitySignature" javaType="java.lang.String"/>
+		<result column="address" property="address" javaType="java.lang.String"/>
+		<result column="first_login_status" property="firstLoginStatus" javaType="java.lang.Integer"/>
+	</resultMap>
+
+	<resultMap type="sdibt.group.entity.Permission" id="permissionMap">
+		<id column="id" property="id" javaType="java.lang.Long"/>
+		<result column="permission" property="permission" javaType="java.lang.String"/>
+		<result column="description" property="description" javaType="java.lang.String"/>
+		<result column="available" property="available" javaType="java.lang.Integer"/>
+		<result column="url" property="url" javaType="java.lang.String"/>
+		<result column="parent_id" property="parentId" javaType="java.lang.Integer"/>
+	</resultMap>
+
+ <!-- 查询所有，返回值类型对应的是resultMap -->
+  <select id="findByUsername" resultMap="userMap" parameterType="java.lang.String">
+     select * from sys_users where username=#{username}
+  </select>
+
+  <select id="findRoles" resultType="java.lang.String"  parameterType="java.lang.String">
+  	select r.role from sys_users u INNER JOIN sys_users_roles ur on u.id=ur.user_id 
+	INNER JOIN sys_roles r on ur.role_id=r.id where u.username=#{username};
+  </select>
+  
+  <!-- 根据用户名查询角色记录 -->
+  <select id="findRoleByUsername" resultType="map"  parameterType="java.lang.String">
+  	select r.* from sys_users u INNER JOIN sys_users_roles ur on u.id=ur.user_id 
+	INNER JOIN sys_roles r on ur.role_id=r.id where u.username=#{username};
+  </select>
+
+  <!-- 根据用户名查询用户信息 -->
+  <select id="findUserByName" resultType="map"  parameterType="java.lang.String">
+   	select u.*,r.role,r.description from sys_users u INNER JOIN sys_users_roles ur on u.id=ur.user_id 
+	INNER JOIN sys_roles r on ur.role_id=r.id where u.username=#{username}
+  </select>
+
+  <!-- 查询所有用户 -->
+  <select id="listUsers" resultType="map">
+   	select u.*,r.role,r.description from sys_users u left join sys_users_roles ur on u.id=ur.user_id 
+	left join sys_roles r on ur.role_id=r.id
+  </select>
+  
+  <select id="findPermissions" resultType="java.lang.String"  parameterType="java.lang.String">
+    select p.permission from sys_users u INNER JOIN sys_users_roles ur on u.id=ur.user_id 
+	INNER JOIN sys_roles r on ur.role_id=r.id inner join sys_roles_permissions rp 
+	on r.id=rp.role_id inner join sys_permissions p on p.id=rp.permission_id
+	where u.username=#{username}
+  </select>
+
+  <select id="findPermissionsObject" resultMap="permissionMap"  parameterType="java.lang.String">
+    select p.* from sys_users u INNER JOIN sys_users_roles ur on u.id=ur.user_id 
+	INNER JOIN sys_roles r on ur.role_id=r.id inner join sys_roles_permissions rp 
+	on r.id=rp.role_id inner join sys_permissions p on p.id=rp.permission_id
+	where u.username=#{username} and rp.sys_status=1
+  </select>
+
+	<!-- 添加用户记录 -->
+	<insert id="saveUser" parameterType="sdibt.group.entity.User">
+		insert into sys_users (username,password,salt,locked,first_login_status) 
+		values(#{username}, #{password}, #{salt }, #{locked }, #{firstLoginStatus })
+	</insert>
+
+	<update id="updateUser" parameterType="sdibt.group.entity.User">
+		update sys_users 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="username != null">username=#{username,jdbcType=VARCHAR },</if>
+			<if test="password != null">password=#{password,jdbcType=VARCHAR },</if>
+			<if test="locked != null">
+				<if test="locked == true">locked=1,</if>
+				<if test="locked == false">locked=0,</if>
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+  </mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 采用Dao接口方式开发 -->
+<mapper namespace="sdibt.group.dao.RoleDao">  <!-- namespace为必填项 -->
+
+	<!-- 查询所有角色 -->
+	<select id="listRoles" resultType="map">
+		select * from sys_roles
+	</select>
+
+	<!-- 根据ID账号查询角色信息-->
+	<select id="findRoleById" resultType="map" parameterType="java.lang.Integer">
+		select * from HR_ROLE where id=#{id }
+	</select>
+
+	<!-- 添加角色 -->
+	<insert id="saveRole" parameterType="map">
+		insert into HR_ROLE (id,role_cn,role_en) values (seq_role.nextval,#{roleCN },#{roleEN })
+	</insert>
+
+	<!-- 删除角色 -->
+	<delete id="deleteRole" parameterType="java.lang.Integer">
+		delete from hr_role where id=#{id }
+	</delete>
+
+	<!-- 修改角色信息 -->
+	<update id="updateRole" parameterType="map">
+		update hr_role 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="roleCN != null">role_cn=#{roleCN },</if>
+			<if test="roleEN != null">role_en=#{roleEN },</if>
+		</trim>
+		where id=#{id }
+	</update>
+	
+	<!-- 用户绑定角色 -->
+	<insert id="bindRole"  parameterType="map">
+		insert into sys_users_roles (user_id,role_id) values (#{userId },#{roleId })
+	</insert>
+
+</mapper>

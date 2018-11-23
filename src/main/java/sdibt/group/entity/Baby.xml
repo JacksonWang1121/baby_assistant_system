@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须定义，非绑定到类或是接口的方式 -->
+<mapper namespace="sdibt.group.dao.BabyDao">
+
+	<!-- 统计所有符合条件的学生记录的数量 -->
+	<select id="listStudentToCount" resultType="java.lang.Integer" parameterType="map">
+		select count(1) from baby_info where 
+		<if test="babyName != null">baby_name = #{babyName,jdbcType=VARCHAR } and </if>
+		<if test="classId != null">class_id = #{classId,jdbcType=INTEGER } and </if>
+		<if test="enterDate != null">enter_date = #{enterDate,jdbcType=VARCHAR } and </if>
+		<if test="payStatus != null">pay_status = #{payStatus,jdbcType=INTEGER } and </if>
+		baby_status = 1
+	</select>
+
+	<!-- 多条件分页查询所有符合条件的学生记录 -->
+	<select id="listStudent" resultType="map" parameterType="map">
+		select b.*,u.*,c.class_name from baby_info b inner join sys_users u on b.user_id = u.id 
+		inner join class_info c on b.class_id = c.class_id where 
+		<if test="babyName != null">b.baby_name = #{babyName,jdbcType=VARCHAR } and </if>
+		<if test="classId != null">b.class_id = #{classId,jdbcType=INTEGER } and </if>
+		<if test="enterDate != null">b.enter_date = #{enterDate,jdbcType=VARCHAR } and </if>
+		<if test="payStatus != null">b.pay_status = #{payStatus,jdbcType=INTEGER } and </if>
+		baby_status = 1 limit #{startPage },#{pageSize }
+	</select>
+	
+	<!-- 根据学号查询学生记录 -->
+	<select id="findStudent" resultType="map" parameterType="java.lang.String">
+		select b.*,u.*,c.class_name from baby_info b inner join sys_users u on b.user_id = u.id 
+		inner join class_info c on b.class_id = c.class_id where b.baby_no = #{babyNo, jdbcType=VARCHAR }
+	</select>
+	
+	<!-- 根据班级id查询学生记录 -->
+	<select id="listStudentByClassId" resultType="map" parameterType="java.lang.Integer">
+		select b.*,c.class_name from baby_info b inner join class_info c on b.class_id = c.class_id 
+		where b.class_id = #{classId, jdbcType=INTEGER} and b.baby_status = 1
+	</select>
+
+	<!-- 添加学生记录 -->
+	<insert id="saveBabyInfo" parameterType="sdibt.group.entity.Baby">
+	    insert into baby_info (user_id, baby_no, baby_name, kindergarten_id, grade_id, class_id, enter_date, apply_status, pay_status, baby_status)
+	    values (#{userId, jdbcType=INTEGER }, #{babyNo, jdbcType=VARCHAR }, #{babyName, jdbcType=VARCHAR }, #{kindergartenId, jdbcType=INTEGER }, 
+	    #{gradeId, jdbcType=INTEGER }, #{classId, jdbcType=INTEGER }, #{enterDate, jdbcType=VARCHAR }, #{applyStatus, jdbcType=INTEGER }, 
+	    #{payStatus, jdbcType=INTEGER }, #{babyStatus, jdbcType=INTEGER })
+	</insert>
+
+	<!-- 修改宝宝信息 -->
+	<update id="updateBaby" parameterType="sdibt.group.entity.Baby">
+	    update baby_info 
+	    <trim prefix="set" suffixOverrides=",">
+	        <if test="babyNo!=null">baby_no = #{babyNo, jdbcType=VARCHAR },</if>
+	        <if test="babyName!=null">baby_name = #{babyName, jdbcType=VARCHAR },</if>
+	        <if test="sex!=null">sex = #{sex, jdbcType=VARCHAR },</if>
+	        <if test="birthday!=null">birthday = #{birthday, jdbcType=VARCHAR },</if>
+	        <if test="babyIcon!=null">baby_icon = #{babyIcon, jdbcType=VARCHAR },</if>
+	        <if test="relationship!=null">relationship = #{relationship, jdbcType=VARCHAR },</if>
+	        <if test="classId&gt;=0">
+		        <if test="kindergartenId!=null">kindergarten_id = #{kindergartenId, jdbcType=INTEGER },</if>
+		        <if test="gradeId!=null">grade_id = #{gradeId, jdbcType=INTEGER },</if>
+		        <if test="classId!=null">class_id = #{classId, jdbcType=INTEGER },</if>
+	        </if>
+	        <if test="enterDate!=null">enter_date = #{enterDate, jdbcType=VARCHAR },</if>
+	        <if test="applyStatus!=null">apply_status = #{applyStatus, jdbcType=INTEGER },</if>
+	        <if test="payStatus!=null">pay_status = #{payStatus, jdbcType=INTEGER },</if>
+	        <if test="babyStatus!=null">baby_status = #{babyStatus, jdbcType=INTEGER },</if>
+	    </trim>
+	    where baby_id = #{babyId, jdbcType=INTEGER }
+	</update>
+
+	<!-- 批量修改学生信息：毕业 -->
+	<update id="updateBatchBaby" parameterType="list">
+	    update baby_info set baby_status = 0 where baby_id in 
+	    <foreach collection="list" item="babyId" open="(" close=")" separator=",">
+	        #{babyId }
+	    </foreach>
+	</update>
+
+</mapper>

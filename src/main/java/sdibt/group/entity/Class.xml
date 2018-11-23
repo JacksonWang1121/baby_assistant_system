@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须定义，非绑定到类或是接口的方式 -->
+<mapper namespace="sdibt.group.dao.ClassDao">
+    
+    <resultMap type="sdibt.group.entity.Class" id="classMap">
+        <id column="class_id" property="classId" javaType="java.lang.Integer"/>
+        <result column="class_name" property="className" javaType="java.lang.String"/>
+        <result column="user_id" property="userId" javaType="java.lang.Integer"/>
+        <result column="grade_id" property="gradeId" javaType="java.lang.Integer"/>
+        <result column="kindergarten_id" property="kindergartenId" javaType="java.lang.Integer"/>
+    </resultMap>
+    
+    <resultMap type="sdibt.group.entity.Grade" id="gradeMap">
+        <id column="grade_id" property="gradeId" javaType="java.lang.Integer"/>
+        <result column="grade_name" property="gradeName" javaType="java.lang.String"/>
+    </resultMap>
+
+	<!-- 根据幼儿园id查询所有班级记录(不同年级) -->
+	<select id="listClass"  resultType="map"  parameterType="java.lang.Integer">
+		select c.*,g.grade_name from class_info c inner join grade_info g on c.grade_id = g.grade_id 
+		where kindergarten_id = #{kindergartenId, jdbcType=INTEGER }
+	</select>
+	
+	<!-- 查询年级记录 -->
+	<select id="listGrade"  resultMap="gradeMap">
+		select * from grade_info
+	</select>
+
+</mapper>
+

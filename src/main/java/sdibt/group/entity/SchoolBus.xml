@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须定义，非绑定到类或是接口的方式 -->
+<mapper namespace="sdibt.group.dao.SchoolBusDao">
+
+	<resultMap type="sdibt.group.entity.SchoolBus" id="busMap">
+		<id column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="school_id" property="schoolId" javaType="java.lang.Integer"/>
+		<result column="bus_name" property="busName" javaType="java.lang.String"/>
+		<result column="bus_plate" property="busPlate" javaType="java.lang.String"/>
+		<result column="driver" property="driver" javaType="java.lang.String"/>
+		<result column="driver_tel" property="driverTel" javaType="java.lang.String"/>
+		<result column="bus_status" property="busStatus" javaType="java.lang.String"/>
+	</resultMap>
+
+	<!-- 根据幼儿园编号查询所有校车的记录 -->
+	<select id="listSchoolBus" resultMap="busMap" parameterType="java.lang.Integer">
+		select * from school_bus where school_id=#{schoolId}
+	</select>
+
+	<!-- 添加校车记录 -->
+	<insert id="saveSchoolBus" parameterType="sdibt.group.entity.SchoolBus">
+		insert into school_bus (school_id,bus_name,bus_plate,driver,driver_tel,bus_status) 
+		values (#{schoolId }, #{busName }, #{busPlate }, #{driver }, #{driverTel },	#{busStatus })
+	</insert>
+
+  </mapper>
