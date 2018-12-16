@@ -28,5 +28,44 @@
 		select * from grade_info
 	</select>
 
+	<!-- 根据幼儿园id查询年级的班级(不同年级) -->
+	<select id="listClassByGradeId"  resultType="map"   parameterType="java.lang.Integer">
+		select  *  from  class_info
+		where  kindergarten_id =#{kindergartenId} and  grade_id=#{gradeId}
+	</select>
+	
+	<select id="isExistsTeacherByClassId"   resultType="map"   parameterType="int">
+		select  *  from  class_info a 
+		inner join  sys_users b on  a.user_id=b.id
+		where class_id=#{classId}
+     </select>
+         <select id="listClassCountByKindergartenId"   resultType="int"   parameterType="int">
+		select  count(class_id) as count from  class_info  
+		where kindergarten_id=#{kindergartenId}
+     </select>
+     <select id="listClasses"   resultType="map"   parameterType="int">
+		select  *  from  class_info  a 
+		left join  sys_users b on  a.user_id=b.id
+		inner join  grade_info  c  on  a.grade_id=c.grade_id
+		inner join  kindergarten_info d on d.id=#{kindergartenId}
+		where kindergarten_id=#{kindergartenId}
+		limit #{beginIndex},#{pageSize}
+     </select>
+	
+	<select id="isExistClassName"   resultMap="classMap"  parameterType="String">
+		select  *  from  class_info 
+		where class_name=#{className}
+     </select>
+     <insert id="saveClass">
+     insert into class_info (class_name,grade_id,kindergarten_id)
+     values
+     (#{className},#{gradeId},#{kindergartenId})
+     </insert>
+     <update id="updateClass">
+     update class_info set
+     class_name=#{className}
+     where class_id=#{classId}     
+     </update>
+     
 </mapper>
 

@@ -3,6 +3,8 @@ package sdibt.group.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import sdibt.group.entity.Kindergarten;
 
 /**
@@ -48,5 +50,11 @@ public interface KindergartenDao {
 	 * @param kindergarten
 	 */
 	public void updateKindergarten(Kindergarten kindergarten);
+
+
+
+
+	public int saveKindergarten(Kindergarten kindergarten);
+
 
 }

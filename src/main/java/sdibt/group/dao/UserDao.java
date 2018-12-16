@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.annotations.Param;
+
 import sdibt.group.entity.Permission;
 import sdibt.group.entity.User;
  
@@ -63,4 +65,24 @@ public interface UserDao {
      */
     public void saveUser(User user);
 
+	public int principalRegister(User user);
+
+	public int teacherRegister(User user);
+	public int queryUserIdByUsername(String username);
+
+	public User isExistUsername(String username);
+
+	public List<Map> listTeacher(@Param("beginIndex")int beginIndex,@Param("pageSize")int pageSize);
+
+	public List<Map> listPrincipal(@Param("beginIndex")int beginIndex,@Param("pageSize")int pageSize);
+
+	public int countTeacher(int kindergartenId);
+
+	public boolean updateTeacher(User user);
+
+	public int countPrincipal();
+
+	public boolean updatePrincipal(User user);
+
+	public List<Map> countSex(int kindergartenId);
 }

@@ -87,5 +87,70 @@
 		</trim>
 		where id=#{id}
 	</update>
+ <!-- 鏌ヨ鎵€鏈夛紝杩斿洖鍊肩被鍨嬪搴旂殑鏄痳esultMap -->
+  <select id="isExistUsername" resultMap="userMap" parameterType="java.lang.String">
+     select * from sys_users where username=#{username}
+  </select>
+  
+   <!-- 娣诲姞鍥暱 -->
+  <insert id="principalRegister"  >
+	insert  into  sys_users(username,password,salt,real_name)
+	values
+	(#{username},#{password},#{salt},#{realName})
+  </insert>
+    <!-- 娣诲姞鍥暱 -->
+  <insert id="teacherRegister"  >
+	insert  into  sys_users(username,password,salt,real_name)
+	values
+	(#{username},#{password},#{salt},#{realName})
+  </insert> 
+ <!-- 鏌ヨ鐢ㄦ埛Id锛岃繑鍥炲€肩被鍨嬪搴旂殑鏄痳esultMap -->
+  <select id="queryUserIdByUsername" resultType="java.lang.Integer" parameterType="java.lang.String">
+     select id from sys_users where username=#{username}
+  </select>
 
+  <select id="listTeacher" resultType="map" parameterType="java.lang.Integer">
+     select * from sys_users a
+     inner join sys_users_roles b on a.id=b.user_id and role_id=2
+     inner join class_info  c on  c.kindergarten_id=4 and a.id=c.user_id
+     limit #{beginIndex},#{pageSize}
+  </select>
+  
+  <select id="listPrincipal" resultType="map" >
+     select * from sys_users a
+     inner join sys_users_roles b on a.id=b.user_id and role_id=3
+     inner join kindergarten_info  c on  a.id=c.principal_id
+      limit #{beginIndex},#{pageSize}
+  </select>
+  
+    <select id="countTeacher" resultType="int" >
+     select count(*) count
+		from sys_users a
+		inner join sys_users_roles b on a.id=b.user_id and b.role_id=2
+		inner  join class_info  c  on a.id=c.user_id and c.kindergarten_id=#{kindergartenId}
+  </select>
+  <update id="updateTeacher">
+  update sys_users 
+  set  real_name=#{realName},address=#{address}
+  where id=#{id}
+  </update> 
+  <select id="countPrincipal" resultType="int">
+   select count(a.id) as count from sys_users a
+  inner join sys_users_roles b on a.id=b.user_id and b.role_id=3 
+  inner join kindergarten_info  c on  a.id=c.principal_id
+  </select>
+
+    <update id="updatePrincipal">
+  update sys_users 
+  set  real_name=#{realName},address=#{address},username=#{username}
+  where id=#{id}
+  </update> 
+  
+  <select id="countSex" resultType="map" parameterType="java.lang.Integer">
+	select sex,count(*)  as count from sys_users a
+	inner join class_info b on a.id=b.user_id and b.kindergarten_id=#{kindergartenId}
+	group by sex
+  </select>
+  
+  
   </mapper>

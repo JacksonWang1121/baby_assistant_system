@@ -3,6 +3,8 @@ package sdibt.group.dao;
 import java.util.List;
 import java.util.Map;
 
+import sdibt.group.entity.Role;
+
 /**
  * Role业务
  * title: RoleDao
@@ -47,5 +49,7 @@ public interface RoleDao {
 	 * @param map
 	 */
 	public void bindRole(Map map);
+
+	public int saveUserRole(Role role);
 
 }

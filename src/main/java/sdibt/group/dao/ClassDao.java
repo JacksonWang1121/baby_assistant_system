@@ -3,6 +3,9 @@ package sdibt.group.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
+import sdibt.group.entity.Class;
 import sdibt.group.entity.Grade;
 
 /**
@@ -28,5 +31,21 @@ public interface ClassDao {
 	 * @return
 	 */
 	public List<Grade> listGrade();
+
+	
+
+	public List<Map> listClassByGradeId(@Param("kindergartenId")int kindergartenId,@Param("gradeId") int gradeId);
+
+	public Map isExistsTeacherByClassId(int classId);
+
+	public List<Map> listClasses(@Param("kindergartenId")int kindergartenId,@Param("beginIndex") int beginIndex, @Param("pageSize")int pageSize);
+
+	public Class isExistClassName(String className);
+
+	public int saveClass(Class class1);
+
+	public int listClassCountByKindergartenId(int kindergartenId);
+
+	public int updateClass(@Param("className")String className, @Param("classId") int classId);
 
 }
