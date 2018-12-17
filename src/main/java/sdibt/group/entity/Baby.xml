@@ -51,7 +51,7 @@
 	    <trim prefix="set" suffixOverrides=",">
 	        <if test="babyNo!=null">baby_no = #{babyNo, jdbcType=VARCHAR },</if>
 	        <if test="babyName!=null">baby_name = #{babyName, jdbcType=VARCHAR },</if>
-	        <if test="sex!=null">sex = #{sex, jdbcType=VARCHAR },</if>
+	        <if test="sex!=null">sex = #{sex, jdbcType=VARCHAR }</if>
 	        <if test="birthday!=null">birthday = #{birthday, jdbcType=VARCHAR },</if>
 	        <if test="babyIcon!=null">baby_icon = #{babyIcon, jdbcType=VARCHAR },</if>
 	        <if test="relationship!=null">relationship = #{relationship, jdbcType=VARCHAR },</if>

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import sdibt.group.entity.Permission;
 import sdibt.group.entity.User;
+import sdibt.group.vo.PageVO;
 
 public interface IUserService {
 
@@ -59,8 +60,25 @@ public interface IUserService {
 
     /**
      * 添加用户记录
-     * @param user
      */
     public void saveUser(User user);
+
+	public boolean principalRegister(User user, String kindergartenName);
+
+	public boolean teacherRegister(User user, int classId);
+
+	public boolean isExistUsername(String username);
+
+	public PageVO listTeacher(int kindergartenId, int page, int pageCount);
+
+	public PageVO listPrincipal(int page, int pageSize);
+
+	public boolean updateTeacher(User user);
+
+	public boolean updatePrincipal(User user);
+
+	public List<Map> countSex(int kindergartenId);
+
+
 
 }

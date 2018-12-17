@@ -1,5 +1,9 @@
 package sdibt.group.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,9 +11,15 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -29,6 +39,7 @@ import sdibt.group.service.IKindergartenService;
 import sdibt.group.service.IRoleService;
 import sdibt.group.service.IUserService;
 import sdibt.group.util.PasswordHelper;
+import sdibt.group.vo.PageVO;
 /**
  * 
  * Title:UserController
@@ -229,5 +240,244 @@ public class UserController {
 		//this.userService.updateUser(user);
 		return "forward:/user/listUsers"; 
 	}
+	   /**
+     * 是否存在用户
+     * @return
+     */
+	 @RequestMapping("/isExistsUsername")
+	  @ResponseBody
+	  public String isExistsUsername(String username) {
+		  //是否存在用户?
+	  boolean result=this.userService.isExistUsername(username);
+		  if(result){
+			  return  "true";
+		  }
+		 return "false";
+		  
+	  }
+	   /**
+	     * 园长注册
+	     * @return
+	     */
+	  @RequestMapping("/principalRegister")
+	  @ResponseBody
+	  public String principalRegister(User user,String kindergartenName){
+		
+		 
 	
+		  PasswordHelper passwordHelper=new PasswordHelper();
+		  passwordHelper.encryptPassword(user);	 
+		  
+		  System.out.println(user.getUsername());
+		  boolean  result=this.userService.principalRegister(user,kindergartenName);
+		  return "1";
+	  }
+	  @RequestMapping("/teacherRegister")
+	  @ResponseBody
+	  public String teacherRegister(User user , int classId){
+        boolean  result=this.userService.teacherRegister(user,classId);
+		return "1";
+	  }
+	  @RequestMapping("/listTeacher")
+	  public String listTeacher(HttpSession session,Map map,String curPage, String pageSize){
+		  int kindergartenId = (int) session.getAttribute("kindergartenId");
+		  int page,pageCount;
+	      //若curPage小于或等于0，则默认设置为1
+	      		if (curPage == null) {
+	      			page = 1;
+	      		}else{
+	      			page = Integer.valueOf(curPage);
+	      		}
+	      		//若pageSize小于或等于0，则默认设置为50	    
+	      			pageCount =3;      		      		
+        PageVO  pv=this.userService.listTeacher(kindergartenId,page,pageCount);
+        map.put("pv", pv);
+		return "teacherManage";
+	  }
+	  
+	  @RequestMapping("/listTeacher1")
+	  @ResponseBody
+	  public PageVO listTeacher1(HttpSession session,Map map,String curPage, String pageSize){
+		  int kindergartenId = (int) session.getAttribute("kindergartenId");
+		  int page,pageCount;
+	      //若curPage小于或等于0，则默认设置为1
+	      		if (curPage == null) {
+	      			page = 1;
+	      		}else{
+	      			page = Integer.valueOf(curPage);
+	      		}
+	      		//若pageSize小于或等于0，则默认设置为50
+	      			pageCount =3;	      
+	      		
+        PageVO  pv=this.userService.listTeacher(kindergartenId,page,pageCount);
+        
+		return pv;
+	  }
+	  
+	  @RequestMapping("/updateTeacher")
+	  @ResponseBody
+	  public boolean updateTeacher(User user){
+	
+		System.out.println(user.getId());
+		System.out.println(user.getAddress());
+		System.out.println(user.getRealName());
+		  boolean  result=this.userService.updateTeacher(user);
+		  return result;
+	  }
+	  @RequestMapping("/listPrincipal")
+	  public String listPrincipal(HttpSession session,Map map,String curPage){
+		  int page,	pageSize =3;;
+	      //若curPage小于或等于0，则默认设置为1
+	      		if (curPage == null) {
+	      			page = 1;
+	      		}else{
+	      			page = Integer.valueOf(curPage);
+	      		}
+	      		//若pageSize小于或等于0，则默认设置为50	      		
+        PageVO  pv=this.userService.listPrincipal(page,pageSize);
+        map.put("pv", pv);
+		return "principalManage";
+	  } 
+	  @RequestMapping("/listPrincipal1")
+	  @ResponseBody
+	  public PageVO listPrincipal1(HttpSession session,Map map,String curPage){
+		  int page,	pageSize =3;;
+	      //若curPage小于或等于0，则默认设置为1
+	      		if (curPage == null) {
+	      			page = 1;
+	      		}else{
+	      			page = Integer.valueOf(curPage);
+	      		}
+	      		//若pageSize小于或等于0，则默认设置为50	      		
+        PageVO  pv=this.userService.listPrincipal(page,pageSize);
+		return pv;
+	  } 
+	  @RequestMapping("/updatePrincipal")
+	  @ResponseBody
+	  public boolean updatePrincipal(User user){
+	
+	
+		  boolean  result=this.userService.updatePrincipal(user);
+		  return result;
+	  }
+	  @RequestMapping("/countSex")
+	  @ResponseBody
+	  public List<Map> countSex(HttpSession session){
+		  int kindergartenId = (int) session.getAttribute("kindergartenId");
+
+		  List<Map>  count=this.userService.countSex(kindergartenId);
+		  return count;
+	  }
+	  
+	  @RequestMapping("/listAllPrincipal")
+	  @ResponseBody
+	  public String listAllPrincipal(HttpSession session,HttpServletResponse response){
+		  int kindergartenId = (int) session.getAttribute("kindergartenId");
+	      //若curPage小于或等于0，则默认设置为1
+    	
+    		//若pageSize小于或等于0，则默认设置为50	      		
+		  List<Map>  count=this.userService.countSex(kindergartenId);
+		  
+		  return "teacherPrincipal";
+	  }
+	  
+	  @RequestMapping("/UploadServlet ")
+	  @ResponseBody
+	  public String UploadServlet (HttpServletRequest request,HttpSession session,HttpServletResponse response)throws ServletException, IOException{
+		   final long serialVersionUID = 1L;		     
+		    // 上传文件存储目录
+		    final String UPLOAD_DIRECTORY = "upload";		 
+		    // 上传配置
+		     final int MEMORY_THRESHOLD= 1024 * 1024 * 3;  // 3MB
+		     final int MAX_FILE_SIZE= 1024 * 1024 * 40; // 40MB
+		    final int MAX_REQUEST_SIZE= 1024 * 1024 * 50; // 50MB
+		    
+		     // 检测是否为多媒体上传
+	        if (!ServletFileUpload.isMultipartContent(request)) {
+	            // 如果不是则停止
+	            PrintWriter writer = response.getWriter();
+	            writer.println("Error: 表单必须包含 enctype=multipart/form-data");
+	            writer.flush();
+	            return   "s";
+	        }
+	 
+	        // 配置上传参数
+	        DiskFileItemFactory factory = new DiskFileItemFactory();
+	        // 设置内存临界值 - 超过后将产生临时文件并存储于临时目录中
+	        factory.setSizeThreshold(MEMORY_THRESHOLD);
+	        // 设置临时存储目录
+	        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+	 
+	        ServletFileUpload upload = new ServletFileUpload(factory);
+	         
+	        // 设置最大文件上传值
+	        upload.setFileSizeMax(MAX_FILE_SIZE);
+	         
+	        // 设置最大请求值 (包含文件和表单数据)
+	        upload.setSizeMax(MAX_REQUEST_SIZE);
+	        
+	        // 中文处理
+	        upload.setHeaderEncoding("UTF-8"); 
+
+	        // 构造临时路径来存储上传的文件
+	        // 这个路径相对当前应用的目录
+	        String uploadPath = getServletContext().getRealPath("/") + File.separator + UPLOAD_DIRECTORY;
+	       
+	         
+	        // 如果目录不存在则创建
+	        File uploadDir = new File(uploadPath);
+	        if (!uploadDir.exists()) {
+	            uploadDir.mkdir();
+	        }
+	 
+	        try {
+	            // 解析请求的内容提取文件数据
+	            @SuppressWarnings("unchecked")
+	            List<FileItem> formItems = upload.parseRequest(request);
+	 
+	            if (formItems != null && formItems.size() > 0) {
+	                // 迭代表单数据
+	                for (FileItem item : formItems) {
+	                    // 处理不在表单中的字段
+	                    if (!item.isFormField()) {
+	                        String fileName = new File(item.getName()).getName();
+	                        String filePath = uploadPath + File.separator + fileName;
+	                        File storeFile = new File(filePath);
+	                        // 在控制台输出文件的上传路径
+	                        System.out.println(filePath);
+	                        // 保存文件到硬盘
+	                        item.write(storeFile);
+	                        request.setAttribute("message",
+	                            "文件上传成功!");
+	                    }
+	                }
+	            }
+	        } catch (Exception ex) {
+	            request.setAttribute("message",
+	                    "错误信息: " + ex.getMessage());
+	        }
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    return "teacherPrincipal";
+	  }
+
+	private ServletRequest getServletContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	  
+	  
+	  
+	  
+	  
 }
+	
+
+	
+	
+

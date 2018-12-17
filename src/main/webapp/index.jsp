@@ -14,14 +14,14 @@
 	padding:0px;
 	margin:0px;
 }
-/* a {
+a {
 	text-decoration: none;
 }
 a:hover {
 	text-decoration:underline;
-} */
+}
 #wrapper {
-	/* width: 1348px; */
+	width: 1348px;
 	margin: 0 auto;
 }
 #head{
@@ -30,12 +30,12 @@ a:hover {
 	/* border:1px solid red; */
 }
 #middle {
-	/* height:539px; */
+	height:539px;
 }
 #menu {
 	float: left;
 	width: 16%;
-	/* height:538px; */
+	height:538px;
 	overflow: scroll;
 	overflow-x:hidden;
 	/* border:1px solid red; */
@@ -43,7 +43,7 @@ a:hover {
 #main {
 	float: right;
 	width: 84%;
-	/* height:536px; */
+	height:536px;
 	/* overflow: scroll; */
 	background-image: url("images/background.jpg") no-repeat 100% 100%;
 	/* border:1px solid red; */
@@ -56,34 +56,15 @@ a:hover {
 </style>
 <script type="text/javascript">
 $(function() {
-	//浏览器当前窗口可视区域高度
-	//console.log('浏览器当前窗口可视区域高度：'+$(window).height());
-	//浏览器当前窗口文档的高度
-	//console.log('浏览器当前窗口文档的高度：'+$(document).height());
-	//浏览器当前窗口文档body的高度
-	//console.log('浏览器当前窗口文档body的高度：'+$(document.body).height());
-	//浏览器当前窗口文档body的总高度 包括border padding margin
-	//console.log('浏览器当前窗口文档body的总高度 ：'+$(document.body).outerHeight(true));
-
-	//浏览器当前窗口可视区域宽度
-	//console.log('浏览器当前窗口可视区域宽度：'+$(window).width());
-	//浏览器当前窗口文档的宽度
-	//console.log('浏览器当前窗口文档的宽度：'+$(document).width());
-	//浏览器当前窗口文档body的宽度
-	//console.log('浏览器当前窗口文档body的宽度：'+$(document.body).width());
-	//浏览器当前窗口文档body的总宽度 包括border padding margin
-	//console.log('浏览器当前窗口文档body的总宽度 ：'+$(document.body).outerWidth(true));
 	
-	//var w = document.documentElement.clientWidth || document.body.clientWidth;
-	var w = $(window).width();
+	/* var w = document.documentElement.clientWidth || document.body.clientWidth;
 	console.log("w = "+w);
-	//var h = document.documentElement.clientHeight || document.body.clientHeight;
-	var h = $(window).height();
+	var h = document.documentElement.clientHeight || document.body.clientHeight;
 	console.log("h = "+h);
 	$("#wrapper").css("width",w+"px");
-	$("#middle").css("height",(h-100)+"px");
-	$("#menu").css("height",(h-101)+"px");
-	$("#main").css("height",(h-102)+"px");
+	//$("#middle").css("height",(h-100)+"px");
+	//$("#menu").css("height",(h-100)+"px");
+	$("#main").css("height",(h-100)+"px"); */
 	
 	//初始化日期
 	var date = new Date();

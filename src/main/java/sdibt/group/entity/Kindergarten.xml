@@ -47,5 +47,12 @@
 	    </trim>
 	    where id = #{id, jdbcType=INTEGER }
 	</update>
+	
+	<insert id="saveKindergarten"  parameterType="map">
+		insert into kindergarten_info (name,registered_date,principal_id) 
+		values
+		 (#{name},#{registeredDate},#{principalId})
+	</insert>
+	
 
   </mapper>
