@@ -40,9 +40,10 @@ $(function() {
 <body>
 <!-- 查询该幼儿园所有校车的信息 -->
 <table id="listSchoolBus" class="table table-condensed" style="width: 840px;">
-    <tr><th>名称</th><th>司机</th><th>联系电话</th><th>车牌号</th><th>状态</th><th>操作</th></tr>
+    <tr><th>编号</th><th>名称</th><th>司机</th><th>联系电话</th><th>车牌号</th><th>状态</th><th>操作</th></tr>
     <c:forEach items="${schoolBusList }" var="bus">
     	<tr>
+    		<td>${bus.id }</td>
     		<td>${bus.busName }</td>
     		<td>${bus.driver }</td>
     		<td>${bus.driverTel }</td>
