@@ -30,13 +30,14 @@ $(function() {
 			dataType:"json",
 			success:function(data, status) {
 				console.log("success-data = "+data);
-				//清空下拉框
-				$("#cls").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
+				var cls = '<option value="">--&nbsp;请选择&nbsp;--</option>';
 				for(var i in data) {
 					//下拉框重新赋值
-					$("#cls").append('<option value="'+data[i].grade_name+','+data[i].class_id+','+data[i].class_name+'">'
-							+data[i].grade_name+','+data[i].class_name+'</option>');
+					cls = cls + '<option value="'+data[i].grade_name+','+data[i].class_id+','+data[i].class_name+'">'
+							+data[i].grade_name+','+data[i].class_name+'</option>';
 				}
+				//重置下拉框
+				$("#cls").html(cls);
 			},
 			error:function(data, status, e) {
 				console.log("error = "+e);
@@ -171,12 +172,13 @@ $(function() {
 			dataType:"json",
 			success:function(data, status) {
 				console.log("success-data = "+data);
-				//清空下拉框
-				$("#gradeId").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
+				var grade = '<option value="">--&nbsp;请选择&nbsp;--</option>';
 				for(var i in data) {
 					//下拉框重新赋值
-					$("#gradeId").append('<option value="'+data[i].gradeId+'">'+data[i].gradeName+'</option>');
+					grade = grade + '<option value="'+data[i].gradeId+'">'+data[i].gradeName+'</option>';
 				}
+				//重置下拉框
+				$("#gradeId").html(grade);
 			},
 			error:function(data, status, e) {
 				console.log("error = "+e);

@@ -19,14 +19,12 @@ $(function() {
 			dataType:"json",
 			success:function(data, status) {
 				console.log("success-data = "+data);
+				//清空下拉框
+				$("#oldClass").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
 				for(var i in data) {
-					if (i == 0) {
-						//清空下拉框
-						$("#oldClass").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
-					}
 					//下拉框重新赋值
-					$("#oldClass").append('<option value="'+data[i].gradeId+','+data[i].classId+','+data[i].className+'">'
-							+data[i].className+'</option>');
+					$("#oldClass").append('<option value="'+data[i].grade_id+','+data[i].class_id+','+data[i].class_name+'">'
+							+data[i].grade_name+','+data[i].class_name+'</option>');
 				}
 			},
 			error:function(data, status, e) {
@@ -55,8 +53,8 @@ $(function() {
 				$("#newClass").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
 				for(var i in data) {
 					//下拉框重新赋值
-					$("#newClass").append('<option value="'+data[i].gradeId+','+data[i].classId+'">'
-							+data[i].className+'</option>');
+					$("#newClass").append('<option value="'+data[i].grade_id+','+data[i].class_id+'">'
+							+data[i].grade_name+','+data[i].class_name+'</option>');
 				}
 			},
 			error:function(data, status, e) {
