@@ -19,9 +19,11 @@ $(function() {
 			dataType:"json",
 			success:function(data, status) {
 				console.log("success-data = "+data);
-				//清空下拉框
-				$("#oldClass").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
 				for(var i in data) {
+					if (i == 0) {
+						//清空下拉框
+						$("#oldClass").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
+					}
 					//下拉框重新赋值
 					$("#oldClass").append('<option value="'+data[i].gradeId+','+data[i].classId+','+data[i].className+'">'
 							+data[i].className+'</option>');
