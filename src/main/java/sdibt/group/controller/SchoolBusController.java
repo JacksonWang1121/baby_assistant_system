@@ -75,8 +75,11 @@ public class SchoolBusController {
 		//获取幼儿园编号
 		int schoolId = (int) session.getAttribute("kindergartenId");
 		schoolBus.setSchoolId(schoolId);
-		this.schoolBusService.saveSchoolBus(schoolBus);
-		return "true";
+		boolean isSave = this.schoolBusService.saveSchoolBus(schoolBus);
+		if (isSave) {
+			return "true";
+		}
+		return "false";
 	}
 
 }

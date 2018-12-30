@@ -49,7 +49,7 @@ public interface KindergartenDao {
 	 * 修改幼儿园记录
 	 * @param kindergarten
 	 */
-	public void updateKindergarten(Kindergarten kindergarten);
+	public int updateKindergarten(Kindergarten kindergarten);
 
 
 

@@ -50,18 +50,18 @@ public interface BabyDao {
 	 * 添加学生记录
 	 * @param baby
 	 */
-	public void saveBabyInfo(Baby baby);
+	public int saveBabyInfo(Baby baby);
 
 	/**
 	 * 批量修改学生信息：毕业
 	 * @param stuList
 	 */
-	public void updateBatchBaby(List<Integer> babyList);
+	public int updateBatchBaby(List<Integer> babyList);
 
 	/**
 	 * 修改宝宝信息
 	 * @param baby
 	 */
-	public void updateBaby(Baby baby);
+	public int updateBaby(Baby baby);
 
 }

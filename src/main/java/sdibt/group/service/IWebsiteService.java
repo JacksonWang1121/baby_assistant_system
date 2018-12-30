@@ -23,22 +23,15 @@ public interface IWebsiteService {
 	public Website findWebsite(int schoolId);
 	
 	/**
-	 * 查看微官网信息
-	 * @param schoolId
-	 * @return
-	 */
-	public Map viewWebsite(int schoolId);
-	
-	/**
 	 * 录入微官网
 	 * @param website
 	 */
-	public void saveWebsite(Website website);
+	public boolean saveWebsite(Website website);
 	
 	/**
 	 * 修改微官网
 	 * @param website
 	 */
-	public void updateWebsite(Website website);
+	public boolean updateWebsite(Website website);
 
 }

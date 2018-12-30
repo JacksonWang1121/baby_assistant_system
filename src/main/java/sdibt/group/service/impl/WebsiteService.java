@@ -1,7 +1,5 @@
 package sdibt.group.service.impl;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -81,10 +79,12 @@ public class WebsiteService implements IWebsiteService {
 	 */
 	@Override
 	@Transactional
-	public void saveWebsite(Website website) {
-//		JSONObject json = (JSONObject) JSON.toJSON(website);
-//		System.out.println("WebsiteController-saveWebsite = "+json.toString());
-		this.websiteDao.saveWebsite(website);
+	public boolean saveWebsite(Website website) {
+		int count = this.websiteDao.saveWebsite(website);
+		if (count == 1) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -92,13 +92,12 @@ public class WebsiteService implements IWebsiteService {
 	 */
 	@Override
 	@Transactional
-	public void updateWebsite(Website website) {
-		this.websiteDao.updateWebsite(website);
-	}
-
-	@Override
-	public Map viewWebsite(int schoolId) {
-		return null;
+	public boolean updateWebsite(Website website) {
+		int count = this.websiteDao.updateWebsite(website);
+		if (count == 1) {
+			return true;
+		}
+		return false;
 	}
 
 }

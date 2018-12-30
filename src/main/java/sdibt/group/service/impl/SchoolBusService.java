@@ -37,8 +37,12 @@ public class SchoolBusService implements ISchoolBusService {
 	 */
 	@Transactional
 	@Override
-	public void saveSchoolBus(SchoolBus schoolBus) {
-		this.schoolBusDao.saveSchoolBus(schoolBus);
+	public boolean saveSchoolBus(SchoolBus schoolBus) {
+		int count = this.schoolBusDao.saveSchoolBus(schoolBus);
+		if (count == 1) {
+			return true;
+		}
+		return false;
 	}
 
 }

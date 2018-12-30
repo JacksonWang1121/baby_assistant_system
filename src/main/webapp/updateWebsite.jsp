@@ -80,6 +80,38 @@ $(function() {
 	
 	/* 点击保存按钮 */
 	$("#updateWebsiteBtn").click(function() {
+		//schoolIntro长度不超过1000
+		if ($("#schoolIntro").val().trim().length > 1000) {
+			alert("校园简介内容长度不能超过1000");
+			return;
+		}
+		//certificateName长度不超过50
+		if ($("#certificateName1").val().trim().length > 50) {
+			alert("资质证书1的内容长度不能超过50");
+			return;
+		}
+		if ($("#certificateName2").val().trim().length > 50) {
+			alert("资质证书2的内容长度不能超过50");
+			return;
+		}
+		if ($("#certificateName3").val().trim().length > 50) {
+			alert("资质证书3的内容长度不能超过50");
+			return;
+		}
+		//teacherIntro长度不超过300
+		if ($("#teacherIntro1").val().trim().length > 300) {
+			alert("教师简介1的内容长度不能超过300");
+			return;
+		}
+		if ($("#teacherIntro2").val().trim().length > 300) {
+			alert("教师简介2的内容长度不能超过300");
+			return;
+		}
+		if ($("#teacherIntro3").val().trim().length > 300) {
+			alert("教师简介3的内容长度不能超过300");
+			return;
+		}
+
 		//用FormData对象来发送二进制文件
 		//FormData构造函数提供的append()方法，除了直接添加二进制文件还可以附带一些其它的参数，作为XMLHttpRequest实例的参数提交给服务端
 		var formData = new FormData($("form_website_update"));

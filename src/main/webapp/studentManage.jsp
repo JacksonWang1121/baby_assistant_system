@@ -211,26 +211,37 @@ $(function() {
 	/* 添加学生记录 */
 	$("#saveStudentBtn").bind('click',function() {
 		//获取学生学号
-		var babyNo = $("#babyNo").val();
-		if (babyNo==null || babyNo.trim()=="") {
+		var babyNo = $("#babyNo").val().trim();
+		//babyNo不能为空
+		if (babyNo=="" || babyNo==null) {
 			alert("请输入学生学号");
 			return;
 		}
+		//babyNo长度不超过8
+		if (babyNo.length > 8) {
+			alert("学号长度不能超过8位");
+			return;
+		}
 		//获取学生姓名
-		var babyName = $("#babyName").val();
-		if (babyName==null || babyName.trim()=="") {
+		var babyName = $("#babyName").val().trim();
+		if (babyName=="" || babyName==null) {
 			alert("请输入学生姓名");
 			return;
 		}
-		//获取联系电话
-		var username = $("#username").val();
-		if (username==null || username.trim()=="") {
+		//获取联系电话,即用户名
+		var username = $("#username").val().trim();
+		if (username=="" || username==null) {
 			alert("请输入联系电话");
 			return;
 		}
-		//获取联系电话
+		//判断联系电话格式
+		if (username.test("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$")) {
+			alert("请输入正确的联系电话");
+			return;
+		}
+		//获取年级编号
 		var gradeId = $("#gradeId").val();
-		if (gradeId==null || gradeId.trim()=="") {
+		if (gradeId=="" || gradeId==null) {
 			alert("请选择年级");
 			return;
 		}
