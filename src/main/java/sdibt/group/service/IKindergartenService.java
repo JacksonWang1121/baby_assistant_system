@@ -47,6 +47,6 @@ public interface IKindergartenService {
 	 * 修改幼儿园记录
 	 * @param kindergarten
 	 */
-	public void updateKindergarten(Kindergarten kindergarten);
+	public boolean updateKindergarten(Kindergarten kindergarten);
 
 }

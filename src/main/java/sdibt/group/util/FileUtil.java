@@ -5,9 +5,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -55,8 +59,8 @@ public class FileUtil {
 		babyAssistantFilePath = getBabyAssistantFilePath(request);
 //		System.out.println("FileUtil::uploadFile-babyAssistantFilePath=" + babyAssistantFilePath);
 		
-		//获取文件名
-		String fileName = mfile.getOriginalFilename();
+		//获取文件名，并正则匹配
+		String fileName = regularFileName(mfile.getOriginalFilename());
 //		System.out.println("FileUtil::uploadFile-fileName(old) = "+fileName);
 		
 		//判断是否存在重名文件，直接获取新的文件名
@@ -75,6 +79,44 @@ public class FileUtil {
 		
 		return fileName;
 	}
+
+	/**
+	 * 通过正则表达式检查并清除文件名中的特殊字符
+	 * @param fileName
+	 * @return
+	 */
+	public static String regularFileName(String fileName) {
+		//获取文件后缀名前点号的位置
+		int point = fileName.lastIndexOf(".");
+		//截取文件名
+		String fname = fileName.substring(0, point);
+		//截取文件名后缀
+		String suffix = fileName.substring(point);
+		//正则全文匹配
+		List<String> matchers = getMatchers("[\u4e00-\u9fa50-9a-zA-Z_]+", fname);
+		fileName = "";
+		for (String str : matchers) {
+			fileName += str;
+		}
+		fileName += suffix;
+		return fileName;
+	}
+
+	/**
+	 * 正则匹配返回所有匹配项
+	 * @param regex
+	 * @param source
+	 * @return
+	 */
+    public static List<String> getMatchers(String regex, String source){
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(source);
+        List<String> list = new ArrayList<>();
+        while (matcher.find()) {
+            list.add(matcher.group());
+        }
+        return list;
+    }
 
 	/**
 	 * 删除文件

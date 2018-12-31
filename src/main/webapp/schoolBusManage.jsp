@@ -9,8 +9,46 @@
 <jsp:include page="common.jsp"></jsp:include>
 <script type="text/javascript">
 $(function() {
-	/* 添加学生记录中的班级下拉框 */
+	/* 添加校车记录按钮的单击触发事件 */
 	$("#saveSchoolBusBtn").bind('click',function() {
+		//获取校车名称
+		var busName = $("#busName").val().trim();
+		//busName不能为空
+		if (busName=="" || busName==null) {
+			alert("请输入校车名称");
+			return;
+		}
+		//获取校车车牌号码
+		var busPlate = $("#busPlate").val().trim();
+		//busPlate不能为空
+		if (busPlate=="" || busPlate==null) {
+			alert("请输入校车车牌号码");
+			return;
+		}
+		//判断校车车牌号码的格式
+		if (!busPlate.test("/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/")) {
+			alert("请输入正确的车牌号码");
+			return;
+		}
+		//获取司机姓名
+		var driver = $("#driver").val().trim();
+		//driver不能为空
+		if (driver=="" || driver==null) {
+			alert("请输入司机姓名");
+			return;
+		}
+		//获取联系电话
+		var driverTel = $("#driverTel").val().trim();
+		if (driverTel=="" || driverTel==null) {
+			alert("请输入司机的联系电话");
+			return;
+		}
+		//判断联系电话格式
+		if (driverTel.test("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$")) {
+			alert("请输入正确的联系电话");
+			return;
+		}
+
 		//获取表单内容
 		var formData = $("#form_schoolbus_save").serialize();
     	$.ajax({
@@ -40,9 +78,10 @@ $(function() {
 <body>
 <!-- 查询该幼儿园所有校车的信息 -->
 <table id="listSchoolBus" class="table table-condensed" style="width: 840px;">
-    <tr><th>名称</th><th>司机</th><th>联系电话</th><th>车牌号</th><th>状态</th><th>操作</th></tr>
+    <tr><th>编号</th><th>名称</th><th>司机</th><th>联系电话</th><th>车牌号</th><th>状态</th><th>操作</th></tr>
     <c:forEach items="${schoolBusList }" var="bus">
     	<tr>
+    		<td>${bus.id }</td>
     		<td>${bus.busName }</td>
     		<td>${bus.driver }</td>
     		<td>${bus.driverTel }</td>

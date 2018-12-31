@@ -9,6 +9,9 @@
 <title>学生管理</title>
 <jsp:include page="common.jsp"></jsp:include>
 <script type="text/javascript">
+//标记所有已缴费复选框是否被选中,默认为true
+var isAllChecked = true;
+
 $(function() {
 	
 	/* 原班级下拉框 */
@@ -23,8 +26,8 @@ $(function() {
 				$("#oldClass").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
 				for(var i in data) {
 					//下拉框重新赋值
-					$("#oldClass").append('<option value="'+data[i].gradeId+','+data[i].classId+','+data[i].className+'">'
-							+data[i].className+'</option>');
+					$("#oldClass").append('<option value="'+data[i].grade_id+','+data[i].class_id+','+data[i].class_name+'">'
+							+data[i].grade_name+','+data[i].class_name+'</option>');
 				}
 			},
 			error:function(data, status, e) {
@@ -53,8 +56,8 @@ $(function() {
 				$("#newClass").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
 				for(var i in data) {
 					//下拉框重新赋值
-					$("#newClass").append('<option value="'+data[i].gradeId+','+data[i].classId+'">'
-							+data[i].className+'</option>');
+					$("#newClass").append('<option value="'+data[i].grade_id+','+data[i].class_id+'">'
+							+data[i].grade_name+','+data[i].class_name+'</option>');
 				}
 			},
 			error:function(data, status, e) {
@@ -133,6 +136,28 @@ $(function() {
 			}
 		});
 	}); */
+	
+	//遍历已缴费复选框
+	$(".paid").each(function() {
+		//点击某一学生记录的已缴费复选框
+		$(this).bind("click", function() {
+			//遍历所有已缴费复选框
+			$(".paid").each(function(i) {
+				var paidCheck = $(".paid").eq(i).prop("checked");
+				//若有一个复选框没有被选中，则isAllChecked置为false
+				if (!paidCheck) {
+					isAllChecked = false;
+				}
+			});
+			//若有一个复选框没有被选中，则全选复选框取消选中
+			//否则选中全选复选框
+			if (isAllChecked) {
+				$("#allPaidCheck").prop("checked",true);
+			} else {
+				$("#allPaidCheck").prop("checked",false);
+			}
+		});
+	});
 	
 	/* 升学报名 */
 	$("#enrollmentBtn").bind('click',function() {

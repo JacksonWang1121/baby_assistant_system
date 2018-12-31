@@ -45,18 +45,18 @@ public interface IBabyService {
 	 * @param baby
 	 * @param username 联系电话
 	 */
-	public void saveStudent(Baby baby, String username);
+	public boolean saveStudent(Baby baby, String username);
 
 	/**
 	 * 批量修改学生信息：毕业
 	 * @param stuList
 	 */
-	public void updateBatchBaby(List<Integer> babyList);
+	public boolean updateBatchBaby(List<Integer> babyList);
 
 	/**
 	 * 修改宝宝信息
 	 * @param baby
 	 */
-	public void updateBaby(Baby baby);
+	public boolean updateBaby(Baby baby);
 
 }

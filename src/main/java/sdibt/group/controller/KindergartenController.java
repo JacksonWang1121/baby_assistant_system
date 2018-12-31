@@ -104,10 +104,12 @@ public class KindergartenController {
 			String fileName = FileUtil.uploadFile(request, photo, "images/kindergarten");
 			kindergarten.setPicture("images/kindergarten/"+fileName);
 		}
-		String address = province+","+city+","+area+","+street;
-		kindergarten.setAddress(address);
-		this.kindergartenService.updateKindergarten(kindergarten);
-		return "true";
+		kindergarten.setAddress(province+","+city+","+area+","+street);
+		boolean isUpdate = this.kindergartenService.updateKindergarten(kindergarten);
+		if (isUpdate) {
+			return "true";
+		}
+		return "false";
 	}
 
 }

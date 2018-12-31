@@ -26,6 +26,6 @@ public interface SchoolBusDao {
 	 * 添加校车记录
 	 * @param schoolBus
 	 */
-	public void saveSchoolBus(SchoolBus schoolBus);
+	public int saveSchoolBus(SchoolBus schoolBus);
 
 }

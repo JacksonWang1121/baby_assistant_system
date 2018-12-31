@@ -127,8 +127,44 @@ $(function() {
 	
 	/* 修改幼儿园信息 */
 	$("#updateKindergartenBtn").bind('click',function() {
+		//获取幼儿园名称
+		var name = $("#name").val().trim();
+		//name不能为空
+		if (name=="" || name==null) {
+			alert("请输入幼儿园名称");
+			return;
+		}
+		//获取幼儿园所在省份
+		var province = $("#province").val();
+		//province不能为空
+		if (province=="" || province==null) {
+			alert("请选择省份");
+			return;
+		}
+		//获取幼儿园所在城市
+		var city = $("#city").val();
+		//city不能为空
+		if (city=="" || city==null) {
+			alert("请选择城市");
+			return;
+		}
+		//获取幼儿园所在县区
+		var area = $("#area").val();
+		//area不能为空
+		if (area=="" || area==null) {
+			alert("请选择县区");
+			return;
+		}
+		//获取幼儿园的咨询电话
+		var telephone = $("#telephone").val().trim();
+		//telephone不能为空
+		if (telephone=="" || telephone==null) {
+			alert("请输入咨询电话");
+			return;
+		}
+
 		//获取表单内容
-		var formData = new FormData($("#form_kindergarten_update"));
+		var formData = new FormData();
 		formData.append("name", $("#name").val());
 		formData.append("description", $("#description").val());
 		formData.append("province", $("#province").val());

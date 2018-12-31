@@ -96,7 +96,7 @@ public class BabyService implements IBabyService {
 	 */
 	@Transactional
 	@Override
-	public void saveStudent(Baby baby, String username) {
+	public boolean saveStudent(Baby baby, String username) {
 		/*
 		 * 注册家长信息
 		 */
@@ -133,8 +133,13 @@ public class BabyService implements IBabyService {
 				baby.setApplyStatus("0");
 			}
 			baby.setBabyStatus("1");
-			this.babyDao.saveBabyInfo(baby);
+			int count = this.babyDao.saveBabyInfo(baby);
+			if (count == 1) {
+				//发送一条带有账号和初始密码的短信
+				return true;
+			}
 		}
+		return false;
 	}
 
 	/**
@@ -160,8 +165,12 @@ public class BabyService implements IBabyService {
 	 */
 	@Transactional
 	@Override
-	public void updateBatchBaby(List<Integer> babyList) {
-		this.babyDao.updateBatchBaby(babyList);
+	public boolean updateBatchBaby(List<Integer> babyList) {
+		int count = this.babyDao.updateBatchBaby(babyList);
+		if (count == babyList.size()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -170,8 +179,12 @@ public class BabyService implements IBabyService {
 	 */
 	@Transactional
 	@Override
-	public void updateBaby(Baby baby) {
-		this.babyDao.updateBaby(baby);
+	public boolean updateBaby(Baby baby) {
+		int count = this.babyDao.updateBaby(baby);
+		if (count == 1) {
+			return true;
+		}
+		return false;
 	}
 
 }

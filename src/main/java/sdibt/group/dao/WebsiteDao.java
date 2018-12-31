@@ -24,12 +24,12 @@ public interface WebsiteDao {
 	 * 录入微官网
 	 * @param website
 	 */
-	public void saveWebsite(Website website);
+	public int saveWebsite(Website website);
 	
 	/**
 	 * 修改微官网
 	 * @param website
 	 */
-	public void updateWebsite(Website website);
+	public int updateWebsite(Website website);
 
 }

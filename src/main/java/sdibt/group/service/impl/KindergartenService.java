@@ -85,8 +85,12 @@ public class KindergartenService implements IKindergartenService {
 	 */
 	@Transactional
 	@Override
-	public void updateKindergarten(Kindergarten kindergarten) {
-		this.kindergartenDao.updateKindergarten(kindergarten);
+	public boolean updateKindergarten(Kindergarten kindergarten) {
+		int count = this.kindergartenDao.updateKindergarten(kindergarten);
+		if (count == 1) {
+			return true;
+		}
+		return false;
 	}
 
 }

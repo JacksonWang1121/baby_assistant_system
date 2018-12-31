@@ -26,6 +26,6 @@ public interface ISchoolBusService {
 	 * 添加校车记录
 	 * @param schoolBus
 	 */
-	public void saveSchoolBus(SchoolBus schoolBus);
+	public boolean saveSchoolBus(SchoolBus schoolBus);
 
 }

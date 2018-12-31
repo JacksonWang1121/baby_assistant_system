@@ -124,8 +124,11 @@ public class WebsiteController {
 			website.setStuWorks(stuWorksStr);
 		}
 		System.out.println("File upload over...");
-		this.websiteService.saveWebsite(website);;
-		return "true";
+		boolean isSave = this.websiteService.saveWebsite(website);
+		if (isSave) {
+			return "true";
+		}
+		return "false";
 	}
 
 	/**
@@ -236,8 +239,11 @@ public class WebsiteController {
 		}
 		
 		System.out.println("File upload over...");
-		this.websiteService.updateWebsite(website);
-		return "true";
+		boolean isUpdate = this.websiteService.updateWebsite(website);
+		if (isUpdate) {
+			return "true";
+		}
+		return "false";
 	}
 	
 	/**

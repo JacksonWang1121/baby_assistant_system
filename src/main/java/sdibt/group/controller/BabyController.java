@@ -143,8 +143,11 @@ public class BabyController {
 		int kindergartenId = (int) session.getAttribute("kindergartenId");
 		//宝宝记录绑定幼儿园id
 		baby.setKindergartenId(kindergartenId);
-		this.babyService.saveStudent(baby,username);
-		return "true";
+		boolean isSave = this.babyService.saveStudent(baby,username);
+		if (isSave) {
+			return "true";
+		}
+		return "false";
 	}
 
 	/**
@@ -205,11 +208,14 @@ public class BabyController {
 			System.out.println(json);
 			//将json格式字符串转为list集合
 			List<Integer> babyList = (List<Integer>) JSONArray.parseArray(json, Integer.class);
-			this.babyService.updateBatchBaby(babyList);
+			boolean isGraduate = this.babyService.updateBatchBaby(babyList);
+			if (isGraduate) {
+				return "true";
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "true";
+		return "false";
 	}
 
 	/**
