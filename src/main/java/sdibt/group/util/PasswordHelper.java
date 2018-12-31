@@ -46,7 +46,7 @@ public class PasswordHelper {
         user.setPassword(newPassword);
     }
     public static void main(String[] args) {
-		User user = new User("parent2", "ok");
+		User user = new User("17853502778", "ok");
 		PasswordHelper ph=new PasswordHelper();
 		ph.encryptPassword(user);
 		System.out.println("password:\n\t"+user.getPassword()+"\nsalt:\n\t"+user.getSalt());

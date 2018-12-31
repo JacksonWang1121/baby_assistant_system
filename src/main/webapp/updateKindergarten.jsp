@@ -26,11 +26,21 @@ $(function() {
 				$("#telephone").val(data.telephone);
 				//address
 				console.log(data.address);
-				var ads = data.address.split(",");
-				$("#province").html('<option value="">'+ads[0]+'</option>');
-				$("#city").html('<option value="">'+ads[1]+'</option>');
-				$("#area").html('<option value="">'+ads[2]+'</option>');
-				$("#street").val(ads[3]);
+				if (data.address!="" || data.address!=null) {
+					var ads = data.address.split(",");
+					if (ads[0]!="" || ads!=null || typeof(ads[0])!="undefined") {
+						$("#province").html('<option value="">'+ads[0]+'</option>');
+					}
+					if (ads[0]!="" || ads!=null || typeof(ads[0])!="undefined") {
+						$("#city").html('<option value="">'+ads[1]+'</option>');
+					}
+					if (ads[0]!="" || ads!=null || typeof(ads[0])!="undefined") {
+						$("#area").html('<option value="">'+ads[2]+'</option>');
+					}
+					if (ads[0]!="" || ads!=null || typeof(ads[0])!="undefined") {
+						$("#street").val(ads[3]);
+					}
+				}
 				if (data.picture != null) {
 					$("#photo").after('<img width="100px" alt="该图片不存在" src="'+data.picture+'">');
 				}
@@ -134,6 +144,13 @@ $(function() {
 			alert("请输入幼儿园名称");
 			return;
 		}
+		//获取幼儿园的咨询电话
+		var telephone = $("#telephone").val().trim();
+		//telephone不能为空
+		if (telephone=="" || telephone==null) {
+			alert("请输入咨询电话");
+			return;
+		}
 		//获取幼儿园所在省份
 		var province = $("#province").val();
 		//province不能为空
@@ -155,23 +172,16 @@ $(function() {
 			alert("请选择县区");
 			return;
 		}
-		//获取幼儿园的咨询电话
-		var telephone = $("#telephone").val().trim();
-		//telephone不能为空
-		if (telephone=="" || telephone==null) {
-			alert("请输入咨询电话");
-			return;
-		}
 
 		//获取表单内容
 		var formData = new FormData();
 		formData.append("name", $("#name").val());
 		formData.append("description", $("#description").val());
-		formData.append("province", $("#province").val());
-		formData.append("city", $("#city").val());
-		formData.append("area", $("#area").val());
-		formData.append("street", $("#street").val());
 		formData.append("telephone", $("#telephone").val());
+		formData.append("province", $('option[value="'+$("#province").val()+'"]').html());
+		formData.append("city", $('option[value="'+$("#city").val()+'"]').html());
+		formData.append("area", $('option[value="'+$("#area").val()+'"]').html());
+		formData.append("street", $("#street").val());
 		formData.append("photo", $("#photo")[0].files[0]);
     	$.ajax({
 			url:"${pageContext.request.contextPath }/kindergarten/updateKindergarten",

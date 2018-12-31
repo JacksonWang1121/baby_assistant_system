@@ -13,7 +13,7 @@ public class StringToNullConverter implements Converter<String, Object> {
 
 	@Override
 	public Object convert(String source) {
-		if (source.equals(""))
+		if ("".equals(source))
 			return null;
 		else
 			return source;

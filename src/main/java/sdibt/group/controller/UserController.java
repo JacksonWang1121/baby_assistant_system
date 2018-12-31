@@ -120,7 +120,7 @@ public class UserController {
 			}
 		} catch (AuthenticationException e) {
 			//登录失败
-			//e.printStackTrace();
+			e.printStackTrace();
 			return "redirect:/login.jsp?msg=loginFailed";
 		}
         return "redirect:/user/main";
