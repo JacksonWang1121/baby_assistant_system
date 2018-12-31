@@ -280,16 +280,19 @@
 		
 		/* 给模态框中的输入框赋值 */
 		$('.bianji').click(function(){
-			var userId= $(this).parent("td").prev().prev().prev().prev().prev().html();
-			var realName = $(this).parent("td").prev().prev().prev().prev().html();
-			var className = $(this).parent("td").prev().prev().prev().html();
-			var username = $(this).parent("td").prev().prev().html();
-			var address = $(this).parent("td").prev().html();
+			var userId= $(this).parent("td").prev().prev().prev().prev().prev().prev().html();
+			var realName = $(this).parent("td").prev().prev().prev().prev().prev().html();
+			var className = $(this).parent("td").prev().prev().prev().prev().html();
+			var username = $(this).parent("td").prev().prev().prev().html();
+			var address = $(this).parent("td").prev().prev().html();
+			var sex = $(this).parent("td").prev().html();
 			$("#userId1").val(userId);
 			$("#realName1").val(realName);
 			$("#className1").val(className);
 			$("#username1").val(username);
 			$("#address1").val(address);
+			$("#sex1").val(sex);
+			
 		});
 		
 		/* 前一页*/
@@ -319,25 +322,27 @@
 	    	    				  +data.data[i].real_name+"</td><td>"
 	    	    					+data.data[i].class_name+"</td><td>"
 	    	    					+data.data[i].username+"</td><td>"
-	    	    					+data.data[i].address+"</td><td><a href=javascript:  class=bianji data-toggle=modal data-target=#myModal>"
-	    	    					+"编辑"+"</a>&nbsp;|&nbsp<a href=${pageContext.request.contextPath }/baby/quitSchool?babyId=${stu.baby_id }>"
-	    	    					+"退休"+"</a></td></tr>");
+	    	    					+data.data[i].address+"</td><td>"
+	    	    					+data.data[i].sex+"</td><td><a href=javascript:  class=bianji data-toggle=modal data-target=#myModal>"
+	    	    					+"编辑"+"</a></td></tr>");
 				}
 	    			/* 刷新当前页数 */
 	    		    $("#curPage").val(data.curPage);
 	    		    
 	    			/* 刷新按钮*/
 	    			$('.bianji').click(function(){
-	    				var userId= $(this).parent("td").prev().prev().prev().prev().prev().html();
-	    				var realName = $(this).parent("td").prev().prev().prev().prev().html();
-	    				var className = $(this).parent("td").prev().prev().prev().html();
-	    				var username = $(this).parent("td").prev().prev().html();
-	    				var address = $(this).parent("td").prev().html();
+	    				var userId= $(this).parent("td").prev().prev().prev().prev().prev().prev().html();
+	    				var realName = $(this).parent("td").prev().prev().prev().prev().prev().html();
+	    				var className = $(this).parent("td").prev().prev().prev().prev().html();
+	    				var username = $(this).parent("td").prev().prev().prev().html();
+	    				var address = $(this).parent("td").prev().prev().html();
+	    				var sex = $(this).parent("td").prev().html();
 	    				$("#userId1").val(userId);
 	    				$("#realName1").val(realName);
 	    				$("#className1").val(className);
 	    				$("#username1").val(username);
-	    				$("#address1").val(address);	    			
+	    				$("#address1").val(address);
+	    				$("#sex1").val(sex);  			
 	    			});
 				},
 				error:function() {
@@ -355,7 +360,6 @@
 			var curPage1=Number($('#curPage').val());
 			var pages=Number($('#pages').val());	
 			var curPage=curPage1<pages?curPage1+1:curPage1;
-			   alert(curPage);
 			$.ajax({
 				url:"${pageContext.request.contextPath }/user/listTeacher1",
 				type:"post",
@@ -377,23 +381,25 @@
 	    				  +data.data[i].real_name+"</td><td>"
 	    					+data.data[i].class_name+"</td><td>"
 	    					+data.data[i].username+"</td><td>"
-	    					+data.data[i].address+"</td><td><a href=javascript: class=bianji data-toggle=modal data-target=#myModal>"
-	    					+"编辑"+"</a>&nbsp;|&nbsp<a href=${pageContext.request.contextPath }/baby/quitSchool?babyId=${stu.baby_id }>"
-	    					+"退休"+"</a></td></tr>");
+	    					+data.data[i].address+"</td><td>"
+	    					+data.data[i].sex+"</td><td><a href=javascript: class=bianji data-toggle=modal data-target=#myModal>"
+	    					+"编辑"+"</a></td></tr>");
 				}
 	    		 
 	    		    $("#curPage").val(data.curPage);
 	    			$('.bianji').click(function(){
-	    				var userId= $(this).parent("td").prev().prev().prev().prev().prev().html();
-	    				var realName = $(this).parent("td").prev().prev().prev().prev().html();
-	    				var className = $(this).parent("td").prev().prev().prev().html();
-	    				var username = $(this).parent("td").prev().prev().html();
-	    				var address = $(this).parent("td").prev().html();
+	    				var userId= $(this).parent("td").prev().prev().prev().prev().prev().prev().html();
+	    				var realName = $(this).parent("td").prev().prev().prev().prev().prev().html();
+	    				var className = $(this).parent("td").prev().prev().prev().prev().html();
+	    				var username = $(this).parent("td").prev().prev().prev().html();
+	    				var address = $(this).parent("td").prev().prev().html();
+	    				var sex = $(this).parent("td").prev().html();
 	    				$("#userId1").val(userId);
 	    				$("#realName1").val(realName);
 	    				$("#className1").val(className);
 	    				$("#username1").val(username);
 	    				$("#address1").val(address);
+	    				$("#sex1").val(sex);
 	    			});
 	    		
 				},
@@ -431,20 +437,7 @@
 			
 		});
 		
-		
-		
-		
-		$("#addFile").on("change",function(){
-			var filePath=$(this).val();
-		
-			type = filePath.substring(filePath.lastIndexOf(".")).toLowerCase(),			
-		    src = window.URL.createObjectURL(this.files[0]); //转成可以在本地预览的格式
-		    if( !type.match(/.png|.jpg|.jpeg/) ) {
-		    	 alert("您上传图片的类型不符合(.jpg|.jpeg|.gif|.png)！");
-		    	 document.getElementById('addFile').value="";
-		}
-			$("#image").attr('src',src);
-		});
+
 
 	});
 
@@ -467,6 +460,7 @@
 				<th>班级名称</th>
 				<th>教师手机号</th>
 				<th>教师家庭地址</th>
+					<th>性别</th>
 			</tr>
 			<c:forEach items="${pv.data}" var="teachers">
 				<tr>
@@ -475,6 +469,7 @@
 					<td>${teachers.class_name }</td>
 					<td>${teachers.username }</td>
 					<td>${teachers.address }</td>
+					<td>${teachers.sex }</td>
 					<td>
 					<a href="javascript:" data-toggle="modal"data-target="#myModal" class="bianji">编辑</a>
 					</td>
@@ -571,11 +566,14 @@
 				<td><input type="text" name="username1"  id="username1" disabled="disabled"></td>
 
 			</tr>
-				<tr>
+			<tr>
 				<td><span class="types">家庭地址：</span></td>
 				<td><input type="text" name="address1"   id="address1"></td>
-
-			</tr>
+		    </tr>
+		    	<tr>
+				<td><span class="types">性别：</span></td>
+				<td><input type="text" name="sex1"   id="sex1"></td>
+		    </tr>
 
 		</table>
 		</div>
@@ -583,13 +581,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<form method="post" action="/BabyAssistantSystem/user/UploadServlet " enctype="multipart/form-data">
-    选择一个文件:
-    <input type="file" name="uploadFile"  id="addFile" />
-    <img id="image"  style="width: 50px;height: 50px">
-    <br/><br/>
-    <input type="submit" value="上传" />
-</form>
+
 
 	
 </body>

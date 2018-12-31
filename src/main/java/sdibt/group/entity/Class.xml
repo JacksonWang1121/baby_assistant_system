@@ -39,19 +39,55 @@
 		inner join  sys_users b on  a.user_id=b.id
 		where class_id=#{classId}
      </select>
-         <select id="listClassCountByKindergartenId"   resultType="int"   parameterType="int">
+     <select id="listClassCountByKindergartenId"   resultType="int"   parameterType="int">
 		select  count(class_id) as count from  class_info  
 		where kindergarten_id=#{kindergartenId}
-     </select>
-     <select id="listClasses"   resultType="map"   parameterType="int">
-		select  *  from  class_info  a 
+     </select>  
+     <select id="listClasses"   resultType="map"   parameterType="int">	
+		select  *,count(e.baby_id) as count  from  class_info  a 
 		left join  sys_users b on  a.user_id=b.id
 		inner join  grade_info  c  on  a.grade_id=c.grade_id
 		inner join  kindergarten_info d on d.id=#{kindergartenId}
-		where kindergarten_id=#{kindergartenId}
+        left join baby_info e on a.class_id=e.class_id
+		where a.kindergarten_id=#{kindergartenId}
+        group by  a.class_id
 		limit #{beginIndex},#{pageSize}
      </select>
-	
+     
+     
+     <select id="listClassCount"   resultType="int">
+		select  count(class_id) as count from  class_info  
+		<trim prefix="where" prefixOverrides="and | or ">
+			  <if test="className!=null">
+			    and  class_name like CONCAT('%',#{className},'%')
+			  </if>
+			   <if test="gradeId!=null">
+			    and  grade_id=#{gradeId} 
+			  </if>
+			  and kindergarten_id=#{kindergartenId}
+	  </trim>
+     </select>
+     
+	 <select id="listClassInfo"   resultType="map"   parameterType="int">	
+		select  *,count(e.baby_id) as count  from  class_info  a 
+		left join  sys_users b on  a.user_id=b.id
+		inner join  grade_info  c  on  a.grade_id=c.grade_id
+		inner join  kindergarten_info d on d.id=#{kindergartenId}
+        left join baby_info e on a.class_id=e.class_id
+        <trim prefix="where" prefixOverrides="and | or ">
+			  <if test="className!=null">
+			    and  a.class_name like CONCAT('%',#{className},'%')
+			  </if>
+			   <if test="gradeId!=null">
+			    and  a.grade_id=#{gradeId} 
+			  </if>
+			  and a.kindergarten_id=#{kindergartenId}
+	  </trim>
+        group by  a.class_id
+		limit #{beginIndex},#{pageSize}
+     </select>
+     
+     
 	<select id="isExistClassName"   resultMap="classMap"  parameterType="String">
 		select  *  from  class_info 
 		where class_name=#{className}
@@ -66,6 +102,11 @@
      class_name=#{className}
      where class_id=#{classId}     
      </update>
-     
+      
+      <update id="updateClassInfo">
+     update class_info set
+     user_id=#{1}
+     where class_id=#{0}     
+     </update>
 </mapper>
 

@@ -142,10 +142,7 @@ public class ClassController {
       		}
       		//若pageSize小于或等于0，则默认设置为50
       			pageCount =3;      	
-      		System.out.println(curPage);
       		PageVO pv   = this.classService.listClasses(kindergartenId,page,pageCount);
-    
-      	
 		return  pv;
 	}
 	
@@ -153,17 +150,33 @@ public class ClassController {
 	@RequestMapping("/updateClass")
 	@ResponseBody
 	public Boolean updateClass(String className,String realName,int classId){
-		System.out.println(className);
-		System.out.println(classId);
 		Boolean result=false;
 		try {
 			result=this.classService.updateClass(className,classId);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		System.out.println(result);
 		return result;
 	}
 	
+	
+	
+	@RequestMapping("/listClassInfo")
+	@ResponseBody
+	public PageVO  listClassInfo(HttpSession session,Map map,HttpServletRequest req,String className,String gradeId,String curPage) {
+		//从session作用域中获取幼儿园id
+		int kindergartenId = (int) session.getAttribute("kindergartenId");
+	
+        int page,pageSize=3;
+      //若curPage小于或等于0，则默认设置为1
+      		if (curPage == null) {
+      			page = 1;
+      		}else{
+      			page = Integer.valueOf(curPage);
+      		} 
+      		PageVO pv= this.classService.listClassInfo(className,gradeId,page,pageSize,kindergartenId);
+    	
+		return  pv;
+	}
 
 }

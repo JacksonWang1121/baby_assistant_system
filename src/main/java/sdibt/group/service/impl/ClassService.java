@@ -134,7 +134,51 @@ public class ClassService implements IClassService {
 			result=false;
 		}
 		return result;
-	} 
+	}
+
+	@Override
+	public PageVO listClassInfo(String className, String gradeId, int curPage,
+			int pageSize, int kindergartenId) {
+		// TODO Auto-generated method stub
+		List<Map> class1;
+		String  gradeId2 = null;
+		 int total;
+		PageVO pv = new PageVO();
+	    //用户总数	
+		if(gradeId==""){
+			  gradeId2=null;
+			  total = this.classDao.listClassCount(className,gradeId2,kindergartenId);
+		 }else{			 
+			  total = this.classDao.listClassCount(className,gradeId,kindergartenId);
+		 }     
+        System.out.println(total);
+        //一共多少页
+        int pages = total % pageSize == 0 ? total / pageSize : total / pageSize + 1;
+        //本页起始用户序号
+        int beginIndex = (curPage - 1) * pageSize;
+        
+        if(pages==1){
+        	pageSize=total;
+        }
+        //本页末尾用户序号的下一个
+    	if(gradeId==""){
+			  gradeId2=null;
+	 class1=this.classDao.listClassInfo(kindergartenId,beginIndex,pageSize,className,gradeId2);	
+		 }else{	
+      class1=this.classDao.listClassInfo(kindergartenId,beginIndex,pageSize,className,gradeId);	
+		 }   
+    
+        pv.setCurPage(curPage);
+        pv.setPageSize(pageSize);
+        pv.setTotal(total);
+        pv.setPages(pages);
+        pv.setData(class1);
+		return pv;
+		
+
+	}
+
+	
 
 
 }
