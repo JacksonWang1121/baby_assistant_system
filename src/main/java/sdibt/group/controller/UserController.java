@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,11 +14,14 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.shiro.SecurityUtils;
@@ -26,7 +30,9 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -50,7 +56,9 @@ import sdibt.group.vo.PageVO;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends HttpServlet{
+	
+
 	@Resource 
 	private IUserService userService;
 	@Resource
@@ -381,101 +389,56 @@ public class UserController {
 		  return "teacherPrincipal";
 	  }
 	  
-	  @RequestMapping("/UploadServlet ")
-	  @ResponseBody
-	  public String UploadServlet (HttpServletRequest request,HttpSession session,HttpServletResponse response)throws ServletException, IOException{
-		   final long serialVersionUID = 1L;		     
-		    // 上传文件存储目录
-		    final String UPLOAD_DIRECTORY = "upload";		 
-		    // 上传配置
-		     final int MEMORY_THRESHOLD= 1024 * 1024 * 3;  // 3MB
-		     final int MAX_FILE_SIZE= 1024 * 1024 * 40; // 40MB
-		    final int MAX_REQUEST_SIZE= 1024 * 1024 * 50; // 50MB
-		    
-		     // 检测是否为多媒体上传
-	        if (!ServletFileUpload.isMultipartContent(request)) {
-	            // 如果不是则停止
-	            PrintWriter writer = response.getWriter();
-	            writer.println("Error: 表单必须包含 enctype=multipart/form-data");
-	            writer.flush();
-	            return   "s";
-	        }
-	 
-	        // 配置上传参数
-	        DiskFileItemFactory factory = new DiskFileItemFactory();
-	        // 设置内存临界值 - 超过后将产生临时文件并存储于临时目录中
-	        factory.setSizeThreshold(MEMORY_THRESHOLD);
-	        // 设置临时存储目录
-	        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
-	 
-	        ServletFileUpload upload = new ServletFileUpload(factory);
-	         
-	        // 设置最大文件上传值
-	        upload.setFileSizeMax(MAX_FILE_SIZE);
-	         
-	        // 设置最大请求值 (包含文件和表单数据)
-	        upload.setSizeMax(MAX_REQUEST_SIZE);
-	        
-	        // 中文处理
-	        upload.setHeaderEncoding("UTF-8"); 
-
-	        // 构造临时路径来存储上传的文件
-	        // 这个路径相对当前应用的目录
-	        String uploadPath = getServletContext().getRealPath("/") + File.separator + UPLOAD_DIRECTORY;
-	       
-	         
-	        // 如果目录不存在则创建
-	        File uploadDir = new File(uploadPath);
-	        if (!uploadDir.exists()) {
-	            uploadDir.mkdir();
-	        }
-	 
-	        try {
-	            // 解析请求的内容提取文件数据
-	            @SuppressWarnings("unchecked")
-	            List<FileItem> formItems = upload.parseRequest(request);
-	 
-	            if (formItems != null && formItems.size() > 0) {
-	                // 迭代表单数据
-	                for (FileItem item : formItems) {
-	                    // 处理不在表单中的字段
-	                    if (!item.isFormField()) {
-	                        String fileName = new File(item.getName()).getName();
-	                        String filePath = uploadPath + File.separator + fileName;
-	                        File storeFile = new File(filePath);
-	                        // 在控制台输出文件的上传路径
-	                        System.out.println(filePath);
-	                        // 保存文件到硬盘
-	                        item.write(storeFile);
-	                        request.setAttribute("message",
-	                            "文件上传成功!");
-	                    }
-	                }
-	            }
-	        } catch (Exception ex) {
-	            request.setAttribute("message",
-	                    "错误信息: " + ex.getMessage());
-	        }
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    return "teacherPrincipal";
+	
+	  
+	  @RequestMapping("/saveFile")
+	  public String filesUpload(@RequestParam(value="file",required=false) MultipartFile[] files) { 
+	
+		     String path = "D:/a/";
+		        //判断file数组不能为空并且长度大于0  
+		        if(files!=null&&files.length>0){  
+		            //循环获取file数组中得文件  
+		            for(int i = 0;i<files.length;i++){  
+		                MultipartFile file = files[i];  
+		                System.out.println(file.getOriginalFilename());
+		                //保存文件  
+		         System.out.println(123);
+		                
+		                saveFile(file, path);  
+		            }  
+		        } 
+	
+		  return "redirect:/user/listTeacher";
+		  
 	  }
+	  
+	    private boolean saveFile(MultipartFile file, String path) {  
+	        // 判断文件是否为空  
+	        if (!file.isEmpty()) {  
+	            try {  
+	                File filepath = new File(path);
+	                if (!filepath.exists()) 
+	                    filepath.mkdirs();
+	                // 文件保存路径  
+	                String savePath = path + file.getOriginalFilename(); 
+	                System.out.println(file.getOriginalFilename());
+	                System.out.println(savePath);
+	                // 转存文件  
+	                file.transferTo(new File(savePath));  
+	                return true;  
+	            } catch (Exception e) {  
+	                e.printStackTrace();  
+	            }  
+	        }  
+	        return false;  
+	    } 
+	  
+	  
+}  
+	  
+	  
+	  
 
-	private ServletRequest getServletContext() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	  
-	  
-	  
-	  
-	  
-}
 	
 
 	

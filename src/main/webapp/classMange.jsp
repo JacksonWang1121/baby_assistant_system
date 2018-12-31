@@ -32,6 +32,79 @@ $(function() {
 			}
 		});
 	});
+	$("#gradeId2").bind('focus',function() {
+		
+    	$.ajax({
+			url:"${pageContext.request.contextPath }/class/listGrade",
+			type:"post",
+			dataType:"json",
+			success:function(data, status) {
+				console.log("success-data = "+data);
+				//清空下拉框
+				$("#gradeId2").html('<option value="">--&nbsp;请选择&nbsp;--</option>');
+				for(var i in data) {
+					//下拉框重新赋值
+					$("#gradeId2").append('<option value="'+data[i].gradeId+'">'+data[i].gradeName+'</option>');
+				}
+			},
+			error:function(data, status, e) {
+				console.log("error = "+e);
+			}
+		});
+	});
+	
+	$("#listClassInfo").click(function(){
+		var className=$("#className2").val();
+		var gradeId=$("#gradeId2").val();
+		alert(className)
+		$.ajax({
+			url:"${pageContext.request.contextPath }/class/listClassInfo",
+			type:"post",
+			dataType:"json",
+			data:{"className":className,"gradeId":gradeId},
+			success:function(data) {
+				var tb = document.getElementById('classTable');
+    	    var rowNum=tb.rows.length;
+    		    for (i=1;i<rowNum;i++) 
+    		    {
+    		        tb.deleteRow(i);
+    		        rowNum=rowNum-1;
+    		        i=i-1;
+    		    } 
+    		    for (var  i=0;i<data.data.length;i++) {
+    		      $("#classTable").append("<tr id=listStudent><td>"
+    				+data.data[i].class_id+"</td><td>"
+    				  +data.data[i].class_name+"</td><td>"
+    					+data.data[i].real_name+"</td><td>"
+    					+data.data[i].grade_name+"</td><td>"
+    					+data.data[i].name+"</td><td>"
+    					+(data.data[i].count)+"</td><td><a  class=bianji   href=javascript:  data-toggle=modal  data-target=#myModal>"
+    					+"编辑"+"</a>&nbsp;|&nbsp<a href=${pageContext.request.contextPath }/baby/quitSchool?babyId=${stu.baby_id }>"
+    					+"退休"+"</a></td></tr>");
+			}
+    		    $('.bianji').click(function(){
+    		    	var classId = $(this).parent("td").prev().prev().prev().prev().prev().prev().html();
+    				var className = $(this).parent("td").prev().prev().prev().prev().prev().html();
+    				var realName = $(this).parent("td").prev().prev().prev().prev().html();
+    				var gradeName = $(this).parent("td").prev().prev().prev().html();
+    				var kindergartenName = $(this).parent("td").prev().prev().html();
+    				$("#classId").val(classId);
+    				$("#className2").val(className);
+    				$("#realName").val(realName);
+    				$("#gradeName").val(gradeName);
+    				$("#kindergartenName").val(kindergartenName);
+    			});
+    		    
+    		    $("#curPage").val(data.curPage);
+    		    $("#pages").val(data.pages);
+			},
+			error:function() {
+				alert('后台报错')	
+			}		
+		});	
+	});
+		
+    	
 	
 	/*判断在该幼儿园该班级名称是否已存在*/
 	$("#className").blur(function(){
@@ -55,7 +128,7 @@ $(function() {
 	});
 	
 	/*判断在该幼儿园该班级名称是否已存在*/
-	$("#className2").blur(function(){
+	$("#className3").blur(function(){
 		var  className =$('#className2').val();
 		$.ajax({
 			url:"${pageContext.request.contextPath }/class/isExistClassName",
@@ -78,7 +151,12 @@ $(function() {
 	/* 添加班级*/
 	$("#saveClass").click(function(){
 			var className = $('#className').val();
-			var gradeId=$('#gradeId').val();
+			var gradeId=$('#gradeId').val();		
+			var info=$('#info').text();
+			if(info=="班级名称已存在"){
+				alert("班级名称已存在,请重新输入")
+				return;
+			}		
 			$.ajax({
 				url:"${pageContext.request.contextPath }/class/saveClass",
 				type:"post",
@@ -104,9 +182,8 @@ $(function() {
 		var  curPage1=Number($('#curPage').val());
 		var  pages=Number($('#pages').val());
 		var  pageSize=Number($('#pageSize').val());
-		var  curPage=(curPage1>2)?curPage1-1:curPage1;
-		$.ajax({
-			
+		var  curPage=(curPage1>=2)?curPage1-1:curPage1;
+		$.ajax({	
 			url:"${pageContext.request.contextPath }/class/listClass11",
 			type:"post",
 			dataType:"json",
@@ -159,10 +236,11 @@ $(function() {
 		var  curPage1=Number($('#curPage').val());
 		var  pages=Number($('#pages').val());
 		var  pageSize=Number($('#pageSize').val());
-		var  curPage=(curPage1<pages)?curPage1+1:curPage1;
-		
-		$.ajax({
-			
+		var className=$("#className2").val();
+		var gradeId=$("#gradeId2").val();	
+		var  curPage=(curPage1<pages)?curPage1+1:curPage1;	
+		if(className==""&&gradeId==""){
+		$.ajax({			
 			url:"${pageContext.request.contextPath }/class/listClass11",
 			type:"post",
 			dataType:"json",
@@ -207,6 +285,53 @@ $(function() {
 				alert('后台报错')	
 			}	
 		});
+		}else{
+			$.ajax({			
+				url:"${pageContext.request.contextPath }/class/listClassInfo",
+				type:"post",
+				dataType:"json",
+				data:{"curPage":curPage,"pageSize":pageSize,"className":className,"gradeId":gradeId},
+				success:function(data) {
+					var tb = document.getElementById('classTable');
+	    	    var rowNum=tb.rows.length;
+	    		    for (i=1;i<rowNum;i++) 
+	    		    {
+	    		        tb.deleteRow(i);
+	    		        rowNum=rowNum-1;
+	    		        i=i-1;
+	    		    } 
+	    		    for (var  i=0;i<data.data.length;i++) {
+	    		      $("#classTable").append("<tr id=listStudent><td>"
+	    				+data.data[i].class_id+"</td><td>"
+	    				  +data.data[i].class_name+"</td><td>"
+	    					+data.data[i].real_name+"</td><td>"
+	    					+data.data[i].grade_name+"</td><td>"
+	    					+data.data[i].name+"</td><td>"
+	    					+(data.data[i].count)+"</td><td><a  class=bianji   href=javascript:  data-toggle=modal  data-target=#myModal>"
+	    					+"编辑"+"</a>&nbsp;|&nbsp<a href=${pageContext.request.contextPath }/baby/quitSchool?babyId=${stu.baby_id }>"
+	    					+"退休"+"</a></td></tr>");
+				}
+	    		    $('.bianji').click(function(){
+	    		    	var classId = $(this).parent("td").prev().prev().prev().prev().prev().prev().html();
+	    				var className = $(this).parent("td").prev().prev().prev().prev().prev().html();
+	    				var realName = $(this).parent("td").prev().prev().prev().prev().html();
+	    				var gradeName = $(this).parent("td").prev().prev().prev().html();
+	    				var kindergartenName = $(this).parent("td").prev().prev().html();
+	    				$("#classId").val(classId);
+	    				$("#className2").val(className);
+	    				$("#realName").val(realName);
+	    				$("#gradeName").val(gradeName);
+	    				$("#kindergartenName").val(kindergartenName);
+	    			});
+	    		    
+	    		    $("#curPage").val(data.curPage);
+	    		    
+				},
+				error:function() {
+					alert('后台报错')	
+				}	
+			});
+		}
 	});
 	
 	/* 给模态框赋值 */
@@ -217,7 +342,7 @@ $(function() {
 		var gradeName = $(this).parent("td").prev().prev().prev().html();
 		var kindergartenName = $(this).parent("td").prev().prev().html();
 		$("#classId").val(classId);
-		$("#className2").val(className);
+		$("#className3").val(className);
 		$("#realName").val(realName);
 		$("#gradeName").val(gradeName);
 		$("#kindergartenName").val(kindergartenName);
@@ -225,7 +350,7 @@ $(function() {
 
 	/* 更新班级信息 */
 	$("#updateClass").click(function() {
-			var className = $('#className2').val();
+			var className = $('#className3').val();
 			var realName = $("#realName").val();
 			var classId = $("#classId").val();
 			$.ajax({
@@ -234,7 +359,7 @@ $(function() {
 				dataType : "json",
 				data : {"className" : className,"realName" : realName,"classId" : classId},
 				success : function(data) {
-					if (data=="true") {
+					if (data==true) {				
 						alert("更新成功")
 						window.location.href="/BabyAssistantSystem/class/listClasses";
 					} else {
@@ -253,39 +378,20 @@ $(function() {
 	<form id="form_session_find" action="${pageContext.request.contextPath }/baby/listStudent?curPage=${pv.curPage }&pageSize=${pv.pageSize }" method="post">
 	<table class="table">
 		<tr>
-			<th><label for="fbabyName">学生姓名</label></th>
-			<td><input type="text" name="babyName" id="fbabyName" value="${conditions.babyName }"/></td>
-			
+			<th><label for="fbabyName">班级名称:</label></th>
+			<td><input type="text" name="className2" id="className2"/></td>	
+			<td>年级:</td>		
 			<td>
-				<select name="cls" id="cls">
-					<c:if test="${conditions.classId eq null }">
-						<option value="">--&nbsp;请选择&nbsp;--</option>
-					</c:if>
-					<c:if test="${conditions.classId ne null }">
-						<option value="${gradeName },${conditions.classId },${className }">${gradeName},${className }</option>
-					</c:if>
+			     <select id="gradeId2" name="gradeId2">
+					<option value="">--&nbsp;请选择&nbsp;--</option>
 				</select>
 			</td>
 			<td>
-				<input type="submit" class="btn btn-primary"   value="查询">
-				<input type="button" class="btn btn-primary" id="resetBtn" value="重置">
+				<input   type="button"  id="listClassInfo" class="btn btn-primary"   value="查询">
 				<input type="button" class="btn btn-primary" id="excelBtn" value="导出Excel">
 			</td>
 		</tr>
 	</table>
-	
-	<table class="table">
-	<tr>
-		<th><label for="fenterDate">入园时间</label></th>
-		<td><input type="text" class="Wdate" name="enterDate" id="fenterDate" value="${conditions.enterDate }" onclick="WdatePicker({'dateFmt':'yyyy-MM-dd'})"/></td>
-		<th><label for="payStatus">缴费状态</label></th>
-		<td>
-			<input type="radio" name="payStatus" class="fpayStatus" value="" checked="checked"/>全部
-			<input type="radio" name="payStatus" class="fpayStatus" value="0"/>待缴费
-			<input type="radio" name="payStatus" class="fpayStatus" value="1"/>已缴费
-		</td>
-	</tr>
-</table>
 </form>
 
 
@@ -337,8 +443,7 @@ $(function() {
 					<option value="">--&nbsp;请选择&nbsp;--</option>
 				</select>
 			</td>
-		</tr>
-		
+		</tr>	
 		<tr>
 		<td colspan="4" style="text-align:center;"> 
 		<input id="saveClass"  type="button" class="btn btn-primary"  value="添加班级">
@@ -364,7 +469,7 @@ $(function() {
 					</tr>
 					<tr>
 						<td><span class="types">班级名称：</span></td>
-						<td><input type="text" name="className2" id="className2"></td>
+						<td><input type="text" name="className3" id="className3"></td>
 		                <td><span id="info1"></span></td>
 					</tr>
 					<tr>

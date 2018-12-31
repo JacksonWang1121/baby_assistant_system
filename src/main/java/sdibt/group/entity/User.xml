@@ -124,11 +124,11 @@
   </select>
   
     <select id="countTeacher" resultType="int" >
-     select count(*) count
+       select count(*) count
 		from sys_users a
 		inner join sys_users_roles b on a.id=b.user_id and b.role_id=2
 		inner  join class_info  c  on a.id=c.user_id and c.kindergarten_id=#{kindergartenId}
-  </select>
+    </select>
   <update id="updateTeacher">
   update sys_users 
   set  real_name=#{realName},address=#{address}
@@ -147,8 +147,10 @@
   </update> 
   
   <select id="countSex" resultType="map" parameterType="java.lang.Integer">
-	select sex,count(*)  as count from sys_users a
-	inner join class_info b on a.id=b.user_id and b.kindergarten_id=#{kindergartenId}
+  	select sex,count(*)  as count from sys_users a
+	inner join class_info b on a.id=b.user_id 
+    inner join sys_users_roles c on a.id=c.user_id and c.role_id=2
+    where   b.kindergarten_id=#{kindergartenId}
 	group by sex
   </select>
   

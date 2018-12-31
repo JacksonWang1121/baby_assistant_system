@@ -43,4 +43,7 @@ public interface IClassService {
 
 	public Boolean updateClass(String className, int classId);
 
+	public PageVO listClassInfo(String className, String gradeId, int page,
+			int pageSize, int kindergartenId);
+
 }

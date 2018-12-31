@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import sdibt.group.dao.ClassDao;
 import sdibt.group.dao.KindergartenDao;
 import sdibt.group.dao.RoleDao;
 import sdibt.group.dao.UserDao;
@@ -32,7 +33,16 @@ public class UserService implements IUserService {
 	private  RoleDao roleDao;
 	@Resource
 	private KindergartenDao kindergartenDao;
-	
+	@Resource
+	private ClassDao classDao;
+	public ClassDao getClassDao() {
+		return classDao;
+	}
+
+	public void setClassDao(ClassDao classDao) {
+		this.classDao = classDao;
+	}
+
 	public KindergartenDao getKindergartenDao() {
 		return kindergartenDao;
 	}
@@ -182,13 +192,25 @@ public class UserService implements IUserService {
 	@Override
 	public boolean teacherRegister(User user, int classId) {
 		// TODO Auto-generated method stub
+		int n = 0;
 		String username=user.getUsername();
-		System.out.println(username);
 		PasswordHelper passwordHelper=new PasswordHelper();
 		passwordHelper.encryptPassword(user);
 		int result=this.userDao.teacherRegister(user);
-		int userId=this.userDao.queryUserIdByUsername(username);
-		return false;
+		if(result==1){
+			int userId=this.userDao.queryUserIdByUsername(username);
+			Role role=new Role();
+			role.setRoleId(2);
+			role.setUserId(userId);
+			n=this.roleDao.saveUserRole(role);
+			int k=this.classDao.updateClassInfo(classId, userId);
+		}
+		if(n==0){
+			return false;
+		}else{
+			return true;
+		}
+	
 	}
 
 	@Override

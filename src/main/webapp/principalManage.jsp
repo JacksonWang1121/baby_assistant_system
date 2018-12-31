@@ -83,7 +83,57 @@
 				}
 			});
          });
-		
+		$("#curPage").blur(function() {
+			var curPage=$("#curPage").val();
+			$.ajax({
+				url:"${pageContext.request.contextPath }/user/listPrincipal1",
+				type:"post",
+				dataType:"json",
+				data:{"curPage":curPage},
+				success:function(data) {
+					var tb = document.getElementById('principalTable');
+	    	    var rowNum=tb.rows.length;
+	    		    for (i=1;i<rowNum;i++) 
+	    		    {
+	    		        tb.deleteRow(i);
+	    		        rowNum=rowNum-1;
+	    		        i=i-1;
+	    		    } 
+	    		    for (var  i=0;i<data.data.length;i++) {
+	    		    	
+	    		      $("#principalTable").append("<tr><td>"
+	    				+data.data[i].user_id+"</td><td>"
+	    				  +data.data[i].real_name+"</td><td>"
+	    					+data.data[i].username+"</td><td>"
+	    					+data.data[i].name+"</td><td>"
+	    					+data.data[i].address+"</td><td><a href=javascript: class=bianji data-toggle=modal data-target=#myModal>"
+	    					+"编辑"+"</a>&nbsp;|&nbsp<a href=${pageContext.request.contextPath }/baby/quitSchool?babyId=${stu.baby_id }>"
+	    					+"退休"+"</a></td></tr>");
+				}
+	    	
+	    		    $("#curPage").val(data.curPage);
+	    		    $("#pageSize").val(data.pageSize);
+	    			$('.bianji').click(function(){
+	    				var userId= $(this).parent("td").prev().prev().prev().prev().prev().html();
+	    				var realName = $(this).parent("td").prev().prev().prev().prev().html();
+	    				var username = $(this).parent("td").prev().prev().prev().html();
+	    				var name = $(this).parent("td").prev().prev().html();
+	    				var address = $(this).parent("td").prev().html();
+	    				$("#userId1").val(userId);
+	    				$("#realName1").val(realName);
+	    				$("#username1").val(username);
+	    				$("#name1").val(name);
+	    				$("#address1").val(address);
+	    			});
+	    		
+				},
+				error:function() {
+					alert('后台报错')	
+				}	
+			});	
+			
+			
+		});
 		$("#prevPage").click(function(){
 			var pageSize=Number($('#pageSize').val());
 			var curPage1=Number($('#curPage').val());
@@ -111,8 +161,7 @@
 	    					+data.data[i].username+"</td><td>"
 	    					+data.data[i].name+"</td><td>"
 	    					+data.data[i].address+"</td><td><a href=javascript: class=bianji data-toggle=modal data-target=#myModal>"
-	    					+"编辑"+"</a>&nbsp;|&nbsp<a href=${pageContext.request.contextPath }/baby/quitSchool?babyId=${stu.baby_id }>"
-	    					+"退休"+"</a></td></tr>");
+	    					+"编辑"+"</a></td></tr>");
 				}
 	    	
 	    		    $("#curPage").val(data.curPage);
@@ -163,8 +212,7 @@
 	    					+data.data[i].username+"</td><td>"
 	    					+data.data[i].name+"</td><td>"
 	    					+data.data[i].address+"</td><td><a href=javascript: class=bianji data-toggle=modal data-target=#myModal>"
-	    					+"编辑"+"</a>&nbsp;|&nbsp<a href=${pageContext.request.contextPath }/baby/quitSchool?babyId=${stu.baby_id }>"
-	    					+"退休"+"</a></td></tr>");
+	    					+"编辑"+"</a></td></tr>");
 				}
 	    	
 	    		    $("#curPage").val(data.curPage);
@@ -239,40 +287,39 @@
 </head>
 <body>
 	<div>
-	
-	
-<table id="principalTable" class="table table-condensed" style="width: 840px;">
-       <tr><th>园长编号</th><th>园长名称</th><th>园长手机号</th><th>幼儿园名称</th><th>地址</th></tr>
-    <c:forEach items="${pv.data}" var="principals">
-    	<tr>
-    		<td>${principals.user_id}</td>
-    		<td>${principals.real_name }</td>    		
-    		<td>${principals.username }</td>
-    		<td>${principals.name }</td>
-    		<td>${principals.address }</td>
-             <td>
-					<a href="javascript:" data-toggle="modal"data-target="#myModal" class="bianji">编辑</a>&nbsp;|&nbsp;
-					<a href="${pageContext.request.contextPath }/baby/quitSchool?babyId=${stu.baby_id }">退学</a>
-					</td>
-    	</tr>
-    </c:forEach> 
-    </table>
-    
-    
-    <table>
-   	<tr>
-		<td colspan="8" style="text-align:center;">
-			<ul class="pager">
-				<li><a id="prevPage" href="javascript:">上一页</a></li>
-				本页<input type="text" name="pageSize" id="pageSize" value="${pv.pageSize}"  style="width: 30px"/>条,
-				当前第<input type="text" name="curPage" id="curPage"  value="${pv.curPage}"     style="width: 30px"/>页,
-				共计<input type="text" name="pages" id="pages" style="border: none;width: 30px" value="${pv.pages}"      readonly="readonly"/>页
-				<li><a id="nextPage" href="javascript:">下一页</a></li>
-				
-			</ul>
-		</td>
-	</tr>
-</table>
+		<table id="principalTable" class="table table-condensed" style="width:100%;">
+			<tr>
+				<th>园长编号</th>
+				<th>园长名称</th>
+				<th>园长手机号</th>
+				<th>幼儿园名称</th>
+				<th>地址</th>
+			</tr>
+			<c:forEach items="${pv.data}" var="principals">
+				<tr>
+					<td>${principals.user_id}</td>
+					<td>${principals.real_name }</td>
+					<td>${principals.username }</td>
+					<td>${principals.name }</td>
+					<td>${principals.address }</td>
+					<td><a href="javascript:" data-toggle="modal" data-target="#myModal" class="bianji">编辑</a></td>
+				</tr>
+			</c:forEach>
+		</table>
+
+		<table  align="center">
+			<tr align="center">
+				<td>
+					<ul class="pager">
+						<li><a id="prevPage" href="javascript:">上一页</a></li> 本页
+						<input type="text" name="pageSize" id="pageSize" value="${pv.pageSize}" style="width: 30px" />条, 当前第
+						<input type="text" name="curPage" id="curPage"  value="${pv.curPage}" style="width: 30px" />页, 共计
+						<input type="text" name="pages" id="pages" value="${pv.pages}"  readonly="readonly" />页
+						<li><a id="nextPage" href="javascript:">下一页</a></li>
+					</ul>
+				</td>
+			</tr>
+		</table>
 
 		<table class="table">
 			<tr>
@@ -282,9 +329,7 @@
 			</tr>
 			<tr>
 				<td><span class="types">密码：</span></td>
-				<td><input type="password" name="password" id="password"
-					value=""></td>
-
+				<td><input type="password" name="password" id="password" value=""></td>
 			</tr>
 			<tr>
 				<td><span class="types">幼儿园名称：</span></td>
@@ -294,14 +339,9 @@
 			<tr>
 				<td><span class="types">真实名称：</span></td>
 				<td><input type="text" name="realName" id="realName"></td>
-
 			</tr>
-
-
 		</table>
-
-		<input id="principleSave" type="button" value="园长注册">
-
+		<input id="principleSave"  align="top" type="button" value="园长注册">
 	</div>
 	
 	
@@ -339,12 +379,11 @@
 				<tr>
 				<td><span class="types">地址：</span></td>
 				<td><input type="text" name="address1"   id="address1"></td>
-
 			</tr>
 
 		</table>
 		</div>
-		<input id="updateprincipal" style="margin-left: 200px"  type="button" class="btn btn-primary"  value="修改班级">
+		<input id="updateprincipal" style="margin-left: 200px"  type="button" class="btn btn-primary"  value="修改园长信息">
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 	

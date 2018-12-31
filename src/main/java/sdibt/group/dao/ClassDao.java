@@ -48,4 +48,11 @@ public interface ClassDao {
 
 	public int updateClass(@Param("className")String className, @Param("classId") int classId);
 
+	public int listClassCount(@Param("className")String className, @Param("gradeId")String gradeId, @Param("kindergartenId")int kindergartenId);
+
+	public List<Map> listClassInfo(@Param("kindergartenId")int kindergartenId,@Param("beginIndex") int beginIndex,
+			@Param("pageSize")int pageSize,@Param("className") String className, @Param("gradeId")String gradeId);
+
+	public int updateClassInfo(int classId, int userId);
+
 }
